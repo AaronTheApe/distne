@@ -1,4 +1,4 @@
-Distne
-======
+DistNE: Distributed Neuroevolution
+==================================
 
-** TODO: Add description **
+Elixir library for evolving neural network artificial intelligence
