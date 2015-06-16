@@ -1,16 +1,15 @@
 defmodule DistneTest do
   use ExUnit.Case
 
-  import Distne.Net.Con
-  import Distne.Net.TestProbe
-
   test "Con forwards {:stim, amount} as {:stim, amount*weight}" do
-    {:ok, pid} = Distne.Net.Con.start_link(3.14)
+    weight = :random.uniform()
+    {:ok, pid} = Distne.Net.Con.start_link(weight)
     {:ok, sink} = Distne.Net.TestProbe.start_link()
     :ok = GenServer.call(pid, {:set_sink, sink})
-    GenServer.call(pid, {:stim, 2.0})
-    {:ok, {:stim, 2.0 * 3.14}} = GenServer.call(sink, :received)
-    #//GenServer.call(:add_sink, )
+    amount = :random.uniform()
+    GenServer.call(pid, {:stim, amount})
+    expected_sink_stim_amount = weight * amount
+    assert {:ok, {:stim, expected_sink_stim_amount}} == GenServer.call(sink, :received)
   end
 end
 
