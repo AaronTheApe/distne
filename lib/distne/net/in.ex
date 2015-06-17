@@ -2,11 +2,10 @@ defmodule Distne.Net.In do
   use GenServer
 
   require Record
-
-  Record.defrecord State, sinks: []
+  Record.defrecord :state, sinks: HashSet.new
 
   def start_link() do
-    GenServer.start_link(Distne.Net.In, {State, []})
+    GenServer.start_link(Distne.Net.In, state())
   end
 
   def add_sink(pid, sink) do
@@ -17,11 +16,11 @@ defmodule Distne.Net.In do
     GenServer.call(pid, {:stim, amount})
   end
 
-  def handle_call({:add_sink, sink}, _from, {State, sinks}) do
-    {:reply, :ok, {State, [sink | sinks]}}
+  def handle_call({:add_sink, sink}, _from, {:state, sinks}) do
+    {:reply, :ok, {:state, Set.put(sinks, sink)}}
   end
 
-  def handle_call({:stim, amount}, _from, {State, sinks}) do
+  def handle_call({:stim, amount}, _from, {:state, sinks}) do
     Enum.each(sinks, fn(sink) ->
       GenServer.call(sink, {:stim, amount})
     end)
