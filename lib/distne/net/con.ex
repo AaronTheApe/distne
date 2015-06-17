@@ -2,7 +2,7 @@ defmodule Distne.Net.Con do
   use GenServer
 
   require Record
-  Record.defrecord :state, weight: nil, sink: nil
+  Record.defrecordp :state, weight: nil, sink: nil
  
   def start_link(weight) do
     GenServer.start_link(Distne.Net.Con, state(weight: weight))

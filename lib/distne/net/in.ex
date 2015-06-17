@@ -2,7 +2,7 @@ defmodule Distne.Net.In do
   use GenServer
 
   require Record
-  Record.defrecord :state, sinks: HashSet.new
+  Record.defrecordp :state, sinks: HashSet.new
 
   def start_link() do
     GenServer.start_link(Distne.Net.In, state())
