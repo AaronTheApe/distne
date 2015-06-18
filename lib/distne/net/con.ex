@@ -8,16 +8,12 @@ defmodule Distne.Net.Con do
     GenServer.start_link(Distne.Net.Con, state(weight: weight))
   end
 
-  def stim(pid, amount) do
-    GenServer.call(pid, {:stim, amount})
-  end
-
   def set_sink(pid, sink) do
     GenServer.call(pid, {:set_sink, sink})
   end
 
   def handle_call({:stim, amount}, _from, {:state, weight, sink}) do
-    GenServer.call(sink, {:stim, weight*amount})
+    Distne.Net.Stimable.stim(sink, weight*amount)
     {:reply, :ok, {:state, weight, sink}}
   end
 

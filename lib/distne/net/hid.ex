@@ -30,7 +30,7 @@ defmodule Distne.Net.Hid do
     if Set.size(newPending) == 0 do
       activation = :math.erf(newSum)
       Enum.each(sinks, fn(sink) ->
-        GenServer.call(sink, {:stim, activation})
+        Distne.Net.Stimable.stim(sink, activation)
       end)
       {:reply, :ok, {:state, sources, sinks, sources, 0.0}}
     else

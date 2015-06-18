@@ -40,7 +40,7 @@ defmodule DistneTest do
       Distne.Net.In.add_sink(pid, sink)
     end)
     amount = :random.uniform()
-    Distne.Net.In.stim(pid, amount)
+    Distne.Net.Stimable.stim(pid, amount)
     Enum.each(sinks, fn(sink) ->
       assert {:ok, {:stim, amount}} == GenServer.call(sink, :received)
     end)
@@ -53,7 +53,7 @@ defmodule DistneTest do
     Distne.Net.Con.set_sink(pid, sink)
     Enum.each(1..10, fn (_)  ->
       amount = :random.uniform()
-      Distne.Net.Con.stim(pid, amount)
+      Distne.Net.Stimable.stim(pid, amount)
       expected_sink_stim_amount = weight * amount
       assert {:ok, {:stim, expected_sink_stim_amount}} == GenServer.call(sink, :received)
     end)

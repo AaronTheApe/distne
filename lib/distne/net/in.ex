@@ -12,17 +12,13 @@ defmodule Distne.Net.In do
     GenServer.call(pid, {:add_sink, sink})
   end
 
-  def stim(pid, amount) do
-    GenServer.call(pid, {:stim, amount})
-  end
-
   def handle_call({:add_sink, sink}, _from, {:state, sinks}) do
     {:reply, :ok, {:state, Set.put(sinks, sink)}}
   end
 
   def handle_call({:stim, amount}, _from, {:state, sinks}) do
     Enum.each(sinks, fn(sink) ->
-      GenServer.call(sink, {:stim, amount})
+      Distne.Net.Stimable.stim(sink, amount) 
     end)
     {:reply, :ok, {State, sinks}}
   end
