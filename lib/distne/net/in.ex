@@ -1,13 +1,22 @@
 defmodule Distne.Net.In do
+  @moduledoc """
+  An In acts as an artificial neural network input node
+  """
   use GenServer
 
   require Record
   Record.defrecordp :state, sinks: HashSet.new
 
+  @doc """
+  Starts a new In process, returning its PID
+  """
   def start_link() do
     GenServer.start_link(Distne.Net.In, state())
   end
 
+  @doc """
+  Adds another sink node to this In -- another actor which will be forwarded all stims received by this In
+  """
   def add_sink(pid, sink) do
     GenServer.call(pid, {:add_sink, sink})
   end
