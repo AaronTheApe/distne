@@ -1,4 +1,7 @@
 defmodule Distne.Net.Hid do
+  @moduledoc """
+  A Hid acts as a hidden node in a Net
+  """
   use GenServer
 
   require Record

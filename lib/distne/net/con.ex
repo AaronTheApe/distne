@@ -1,4 +1,7 @@
 defmodule Distne.Net.Con do
+  @moduledoc """
+  A Con acts as a weighted connection between other Net nodes
+  """
   use GenServer
 
   require Record
