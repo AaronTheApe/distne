@@ -15,14 +15,14 @@ defmodule Distne.Net.Hid do
   end
 
   @doc """
-  Adds sink to Hid identified by pid
+  Adds sink with PID `sink` to the Hid with PID `hid`
   """
   def add_sink(pid, sink) do
     GenServer.call(pid, {:add_sink, sink})
   end
 
   @doc """
-  Adds source to Hid identified by pid
+  Adds source with PID `source` to Hid with PID `pid`
   """
   def add_source(pid, source) do
     GenServer.call(pid, {:add_source, source})
