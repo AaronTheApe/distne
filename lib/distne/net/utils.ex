@@ -3,7 +3,7 @@ defmodule Distne.Net.Utils do
   Utils is a collection of functions with common utility to to Net nodes
   """
   @doc """
-  Stimulate a Net node identified by pid by amount
+  Stimulates an Con, Hid, In, or Out, with PID `pid`, by amount `amount`
   """
   def stim(pid, amount) do
     GenServer.call(pid, {:stim, amount})

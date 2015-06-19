@@ -8,7 +8,7 @@ defmodule Distne.Net.Con do
   Record.defrecordp :state, weight: nil, sink: nil
  
   @doc """
-  Starts a new Con
+  Starts a new Con with weight `weight`
   """
   def start_link(weight) do
     GenServer.start_link(Distne.Net.Con, state(weight: weight))

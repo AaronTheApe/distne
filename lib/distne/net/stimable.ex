@@ -4,7 +4,7 @@ defprotocol Distne.Net.Stimable do
   """
   @fallback_to_any true
   @doc """
-  Stimulates the Stimable pid by amount
+  Stimulates the Stimable with PID `pid` by amount `amount`
   """
   defdelegate stim(pid, amount), to: Distne.Net.Utils
 end
