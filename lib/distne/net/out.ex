@@ -6,7 +6,7 @@ defmodule Distne.Net.Out do
 
   require Record
   Record.defrecordp :state, sources: HashSet.new, sink: nil, pending: HashSet.new, sum: 0.0
-
+  
   @doc """
   Starts a new Out
   """
@@ -15,14 +15,14 @@ defmodule Distne.Net.Out do
   end
 
   @doc """
-  Sets the sink of the Out identified by pid
+  Sets PID `pid` as the sink the Out with PID `pid` 
   """
   def set_sink(pid, sink) do
     GenServer.call(pid, {:set_sink, sink})
   end
 
   @doc """
-  Adds source to Out identified by pid
+  Adds PID `source` as a source to the Out identified by `pid`
   """
   def add_source(pid, source) do
     GenServer.call(pid, {:add_source, source})

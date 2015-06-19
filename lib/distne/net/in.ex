@@ -1,6 +1,6 @@
 defmodule Distne.Net.In do
   @moduledoc """
-  An In acts as an artificial neural network input node
+  An In acts as an input node in a Net
   """
   use GenServer
 
@@ -15,7 +15,7 @@ defmodule Distne.Net.In do
   end
 
   @doc """
-  Adds another sink node to this In -- another actor which will be forwarded all stims received by this In
+  Adds PID `sink` as a sink to In with PID `pid`
   """
   def add_sink(pid, sink) do
     GenServer.call(pid, {:add_sink, sink})
