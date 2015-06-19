@@ -4,10 +4,16 @@ defmodule Distne.Net.Con do
   require Record
   Record.defrecordp :state, weight: nil, sink: nil
  
+  @doc """
+  Starts a new Con
+  """
   def start_link(weight) do
     GenServer.start_link(Distne.Net.Con, state(weight: weight))
   end
 
+  @doc """
+  Sets the sink of Con identified by pid
+  """
   def set_sink(pid, sink) do
     GenServer.call(pid, {:set_sink, sink})
   end
