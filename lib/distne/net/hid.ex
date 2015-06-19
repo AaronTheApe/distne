@@ -4,14 +4,23 @@ defmodule Distne.Net.Hid do
   require Record
   Record.defrecordp :state, sources: HashSet.new, sinks: HashSet.new, pending: HashSet.new, sum: 0.0
 
+  @doc """
+  Starts a new Hid
+  """
   def start_link() do
     GenServer.start_link(Distne.Net.Hid, state())
   end
 
+  @doc """
+  Adds sink to Hid identified by pid
+  """
   def add_sink(pid, sink) do
     GenServer.call(pid, {:add_sink, sink})
   end
 
+  @doc """
+  Adds source to Hid identified by pid
+  """
   def add_source(pid, source) do
     GenServer.call(pid, {:add_source, source})
   end
