@@ -1,9 +1,15 @@
 defmodule Distne.Net.TestProbe do
+  @moduledoc """
+  A TestProbe acts as sender and receiver of messages for testing purposes
+  """
   use GenServer
   require Record
 
   Record.defrecord State, received: nil, sent: nil
 
+  @doc """
+  Starts a new TestProbe
+  """
   def start_link() do
     GenServer.start_link(Distne.Net.TestProbe, {State, nil, nil})
   end
