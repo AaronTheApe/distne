@@ -6,12 +6,15 @@ defmodule Distne.Net.Con do
 
   require Record
   Record.defrecordp :state, weight: nil, sink: nil
+
+  alias Distne.Net.Con, as: Con
+  alias Distne.Net.Stimable, as: Stimable
  
   @doc """
   Starts a new Con with weight `weight`
   """
   def start_link(weight) do
-    GenServer.start_link(Distne.Net.Con, state(weight: weight))
+    GenServer.start_link(Con, state(weight: weight))
   end
 
   @doc """
@@ -22,7 +25,7 @@ defmodule Distne.Net.Con do
   end
 
   def handle_call({:stim, amount}, _from, {:state, weight, sink}) do
-    Distne.Net.Stimable.stim(sink, weight*amount)
+    Stimable.stim(sink, weight*amount)
     {:reply, :ok, {:state, weight, sink}}
   end
 

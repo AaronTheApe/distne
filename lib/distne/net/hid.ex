@@ -7,11 +7,14 @@ defmodule Distne.Net.Hid do
   require Record
   Record.defrecordp :state, sources: HashSet.new, sinks: HashSet.new, pending: HashSet.new, sum: 0.0
 
+  alias Distne.Net.Hid, as: Hid
+  alias Distne.Net.Stimable, as: Stimable
+
   @doc """
   Starts a new Hid
   """
   def start_link() do
-    GenServer.start_link(Distne.Net.Hid, state())
+    GenServer.start_link(Hid, state())
   end
 
   @doc """
@@ -42,7 +45,7 @@ defmodule Distne.Net.Hid do
     if Set.size(newPending) == 0 do
       activation = :math.erf(newSum)
       Enum.each(sinks, fn(sink) ->
-        Distne.Net.Stimable.stim(sink, activation)
+        Stimable.stim(sink, activation)
       end)
       {:reply, :ok, {:state, sources, sinks, sources, 0.0}}
     else

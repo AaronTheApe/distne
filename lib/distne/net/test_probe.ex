@@ -7,11 +7,13 @@ defmodule Distne.Net.TestProbe do
 
   Record.defrecord State, received: nil, sent: nil
 
+  alias Distne.Net.TestProbe, as: TestProbe
+
   @doc """
   Starts a new TestProbe
   """
   def start_link() do
-    GenServer.start_link(Distne.Net.TestProbe, {State, nil, nil})
+    GenServer.start_link(TestProbe, {State, nil, nil})
   end
 
   def handle_call(:received, _from, {State, received, sent}) do

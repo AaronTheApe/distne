@@ -7,11 +7,14 @@ defmodule Distne.Net.In do
   require Record
   Record.defrecordp :state, sinks: HashSet.new
 
+  alias Distne.Net.In, as: In
+  alias Distne.Net.Stimable, as: Stimable
+
   @doc """
   Starts a new In process, returning its PID
   """
   def start_link() do
-    GenServer.start_link(Distne.Net.In, state())
+    GenServer.start_link(In, state())
   end
 
   @doc """
@@ -27,7 +30,7 @@ defmodule Distne.Net.In do
 
   def handle_call({:stim, amount}, _from, {:state, sinks}) do
     Enum.each(sinks, fn(sink) ->
-      Distne.Net.Stimable.stim(sink, amount) 
+      Stimable.stim(sink, amount) 
     end)
     {:reply, :ok, {State, sinks}}
   end
