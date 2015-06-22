@@ -10,6 +10,9 @@ defmodule Distne.Net.Net do
   alias Distne.Net.Out, as: Out
   alias Distne.Net.Con, as: Con
 
+  """
+  @doc bad doc
+  """
   def add_hid(net) do
     GenServer.call(net, :add_hid)
   end
