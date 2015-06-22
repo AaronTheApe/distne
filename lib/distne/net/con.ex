@@ -5,7 +5,7 @@ defmodule Distne.Net.Con do
   use GenServer
 
   require Record
-  Record.defrecordp :state, weight: nil, sink: nil
+  Record.defrecordp :state, source: nil, weight: nil, sink: nil
 
   alias Distne.Net.Con, as: Con
   alias Distne.Net.Stimable, as: Stimable
@@ -17,6 +17,10 @@ defmodule Distne.Net.Con do
     GenServer.start_link(Con, state(weight: weight))
   end
 
+  def set_source(con, source) do
+    GenServer.call(con, {:set_source, source})
+  end
+
   @doc """
   Sets the sink of Con identified by pid
   """
@@ -24,12 +28,16 @@ defmodule Distne.Net.Con do
     GenServer.call(pid, {:set_sink, sink})
   end
 
-  def handle_call({:stim, amount}, _from, {:state, weight, sink}) do
-    Stimable.stim(sink, weight*amount)
-    {:reply, :ok, {:state, weight, sink}}
+  def handle_call({:set_source, source}, _from, state) do
+    {:reply, :ok, state(state, source: source)}
   end
 
-  def handle_call({:set_sink, sink}, _from, {:state, weight, _}) do
-    {:reply, :ok, {:state, weight, sink}}
+  def handle_call({:set_sink, sink}, _from, state) do
+    {:reply, :ok, state(state, sink: sink)}
+  end
+
+  def handle_cast({:stim, _from, amount}, state) do
+    Stimable.stim(state(state, :sink), state(state, :weight)*amount)
+    {:noreply, state}
   end
 end

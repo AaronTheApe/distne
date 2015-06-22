@@ -16,8 +16,9 @@ defmodule Distne.Net.InTest do
     end)
     amount = :random.uniform()
     Stimable.stim(pid, amount)
+    :timer.sleep(100)
     Enum.each(sinks, fn(sink) ->
-      assert {:ok, {:stim, amount}} == GenServer.call(sink, :received)
+      assert {:ok, {:stim, pid, amount}} == GenServer.call(sink, :received)
     end)
   end
 end

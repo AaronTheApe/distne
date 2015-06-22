@@ -28,10 +28,10 @@ defmodule Distne.Net.In do
     {:reply, :ok, {:state, Set.put(sinks, sink)}}
   end
 
-  def handle_call({:stim, amount}, _from, {:state, sinks}) do
+  def handle_cast({:stim, from, amount}, {:state, sinks}) do
     Enum.each(sinks, fn(sink) ->
       Stimable.stim(sink, amount) 
     end)
-    {:reply, :ok, {State, sinks}}
+    {:noreply, {State, sinks}}
   end
 end

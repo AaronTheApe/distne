@@ -39,7 +39,7 @@ defmodule Distne.Net.Hid do
     {:reply, :ok, {:state, sources, Set.put(sinks, sink), pending, sum}}
   end
 
-  def handle_call({:stim, amount}, {from, _}, {:state, sources, sinks, pending, sum}) do
+  def handle_cast({:stim, from, amount}, {:state, sources, sinks, pending, sum}) do
     newSum = sum + amount
     newPending = Set.delete(pending, from)
     if Set.size(newPending) == 0 do
@@ -47,9 +47,9 @@ defmodule Distne.Net.Hid do
       Enum.each(sinks, fn(sink) ->
         Stimable.stim(sink, activation)
       end)
-      {:reply, :ok, {:state, sources, sinks, sources, 0.0}}
+      {:noreply, {:state, sources, sinks, sources, 0.0}}
     else
-      {:reply, :ok, {:state, sources, sinks, newPending, newSum}}
+      {:noreply, {:state, sources, sinks, newPending, newSum}}
     end
   end
 end

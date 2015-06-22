@@ -39,15 +39,15 @@ defmodule Distne.Net.Out do
     {:reply, :ok, {:state, sources, sink, pending, sum}}
   end
 
-  def handle_call({:stim, amount}, {from, _}, {:state, sources, sink, pending, sum}) do
+  def handle_cast({:stim, from, amount}, {:state, sources, sink, pending, sum}) do
     newSum = sum + amount
     newPending = Set.delete(pending, from)
     if Set.size(newPending) == 0 do
       activation = :math.erf(newSum)
       Stimable.stim(sink, activation)
-      {:reply, :ok, {:state, sources, sink, sources, 0.0}}
+      {:noreply, {:state, sources, sink, sources, 0.0}}
     else
-      {:reply, :ok, {:state, sources, sink, newPending, newSum}}
+      {:noreply, {:state, sources, sink, newPending, newSum}}
     end
   end
 end

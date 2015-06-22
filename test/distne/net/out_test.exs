@@ -18,12 +18,13 @@ defmodule Distne.Net.OutTest do
     Enum.each(1..10, fn(_) ->
       amounts = Enum.map(sources, fn(source) ->
         amount = :random.uniform()
-        GenServer.call(source, {:send, pid, {:stim, amount}})
+        GenServer.call(source, {:send, pid, {:stim, source, amount}})
         amount
       end)
       sum = Enum.sum(amounts)
       expected_activation_result = :math.erf(sum)
-      assert {:ok, {:stim, expected_activation_result}} == GenServer.call(sink, :received)
+      :timer.sleep(100)
+      assert {:ok, {:stim, pid, expected_activation_result}} == GenServer.call(sink, :received)
     end)
   end
 end

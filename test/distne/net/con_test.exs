@@ -13,8 +13,9 @@ defmodule Distne.Net.ConTest do
     Enum.each(1..10, fn (_)  ->
       amount = :random.uniform()
       Stimable.stim(pid, amount)
+      :timer.sleep(1)
       expected_sink_stim_amount = weight * amount
-      assert {:ok, {:stim, expected_sink_stim_amount}} == GenServer.call(sink, :received)
+      assert {:ok, {:stim, pid, expected_sink_stim_amount}} == GenServer.call(sink, :received)
     end)
   end
 end

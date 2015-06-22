@@ -6,6 +6,6 @@ defmodule Distne.Net.Utils do
   Stimulates an Con, Hid, In, or Out, with PID `pid`, by amount `amount`
   """
   def stim(pid, amount) do
-    GenServer.call(pid, {:stim, amount})
+    GenServer.cast(pid, {:stim, self(), amount})
   end
 end
