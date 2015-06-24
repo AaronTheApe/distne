@@ -9,7 +9,7 @@ defmodule Distne.Net.Con do
 
   alias Distne.Net.Con, as: Con
   alias Distne.Net.Stimable, as: Stimable
- 
+
   @doc """
   Starts a new Con with weight `weight`
   """
@@ -17,6 +17,9 @@ defmodule Distne.Net.Con do
     GenServer.start_link(Con, state(weight: weight))
   end
 
+  @doc """
+  Sets source of Con with PID `con` to PID `source`
+  """
   def set_source(con, source) do
     GenServer.call(con, {:set_source, source})
   end
