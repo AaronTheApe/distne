@@ -11,13 +11,16 @@ defmodule Distne.Net.NetTest do
     {:ok, input} = Net.add_in(net)
     {:ok, hid} = Net.add_hid(net)
     {:ok, out} = Net.add_out(net)
-    {:ok, _con1} = Net.connect(net, input, hid, 0.1)
-    {:ok, _con2} = Net.connect(net, hid, out, 0.2)
+    con1_weight = :random.uniform()
+    con2_weight = :random.uniform()
+    {:ok, _con1} = Net.connect(net, input, hid, con1_weight)
+    {:ok, _con2} = Net.connect(net, hid, out, con2_weight)
     {:ok, actuator_array} = TestProbe.start_link()
     :ok = Net.set_actuator_array(net, actuator_array)
-    input_vector = [0.3]
+    input_vector_weight = :random.uniform()
+    input_vector = [input_vector_weight]
     Net.input_vector(net, input_vector)
-    expected_output_vector = {:output_vector, [:math.erf(0.2 * :math.erf(0.1 * 0.3))]}
+    expected_output_vector = {:output_vector, [:math.erf(con2_weight * :math.erf(con1_weight * input_vector_weight))]}
     :timer.sleep(1000)
     assert {:ok, expected_output_vector} == GenServer.call(actuator_array, :received)
   end
