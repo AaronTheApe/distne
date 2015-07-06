@@ -11,8 +11,8 @@ defmodule Distne.Net.NetTest do
     {:ok, input} = Net.add_in(net)
     {:ok, hid} = Net.add_hid(net)
     {:ok, out} = Net.add_out(net)
-    {:ok, con1} = Net.connect(net, input, hid, 0.1)
-    {:ok, con2} = Net.connect(net, hid, out, 0.2)
+    {:ok, _con1} = Net.connect(net, input, hid, 0.1)
+    {:ok, _con2} = Net.connect(net, hid, out, 0.2)
     {:ok, actuator_array} = TestProbe.start_link()
     :ok = Net.set_actuator_array(net, actuator_array)
     input_vector = [0.3]

@@ -20,7 +20,7 @@ defmodule Distne.Net.TestProbe do
     {:reply, {:ok, received}, {State, received, sent}}
   end
 
-  def handle_call({:send, pid, message}, _from, {State, received, sent}) do
+  def handle_call({:send, pid, message}, _from, {State, received, _sent}) do
     GenServer.cast(pid, message)
     {:reply, :ok, {State, received, message}}
   end

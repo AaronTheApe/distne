@@ -28,9 +28,9 @@ defmodule Distne.Net.In do
     {:reply, :ok, {:state, Set.put(sinks, sink)}}
   end
 
-  def handle_cast({:stim, from, amount}, {:state, sinks}) do
+  def handle_cast({:stim, _from, amount}, {:state, sinks}) do
     Enum.each(sinks, fn(sink) ->
-      Stimable.stim(sink, amount) 
+      Stimable.stim(sink, amount)
     end)
     {:noreply, {State, sinks}}
   end

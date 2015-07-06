@@ -1,8 +1,11 @@
 defmodule Distne.Net.Net do
+  @moduledoc """
+  A Net acts as an artificial neural network
+  """
   use GenServer
 
   require Record
-  Record.defrecordp :state, sensory_array: nil, ins: [], hids: HashSet.new, outs: [], cons: HashSet.new, pending: [], received: %{}, actuator_array: nil
+  Record.defrecordp :state, sensory_array: nil, ins: [], hids: HashSet.new, outs: [], cons: HashSet.new, pending: [], received: %{}, actuator_array: nil, sensor_array: nil
 
   alias Distne.Net.Net, as: Net
   alias Distne.Net.In, as: In
@@ -10,34 +13,56 @@ defmodule Distne.Net.Net do
   alias Distne.Net.Out, as: Out
   alias Distne.Net.Con, as: Con
 
-  """
-  @doc bad doc
+  @doc """
+    Adds a new Hid to Net with PID `net`, and returns
+    the new Hid's PID
   """
   def add_hid(net) do
     GenServer.call(net, :add_hid)
   end
 
+  @doc """
+    Adds a new In to the Net with PID `net`, and returns
+    this new In's PID
+  """
   def add_in(net) do
     GenServer.call(net, :add_in)
   end
 
+  @doc """
+    Adds a new Out to the Net with PID `net`, and returns
+    this new Out's PID
+  """
   def add_out(net) do
     GenServer.call(net, :add_out)
   end
 
+  @doc """
+    Connects `net`'s' `source` to `sink` with `weight`
+  """
   def connect(net, source, sink, weight) do
     GenServer.call(net, {:connect, source, sink, weight})
   end
 
+  @doc """
+    Stimulates `net` with input vector `v`
+  """
   def input_vector(net, v) do
     GenServer.call(net, {:input_vector, v})
   end
 
+  @doc """
+    Sets 'net's 'actuator_array'
+  """
   def set_actuator_array(net, actuator_array) do
-    GenServer.call(net, {:set_actuator_array, actuator_array})
+    :ok = GenServer.call(net, {:set_actuator_array, actuator_array})
   end
 
+  @doc """
+    Sets 'net's 'sensor_array'
+  """
   def set_sensor_array(net, sensor_array) do
+    :ok = GenServer.call(net, {:set_sensor_array, sensor_array})
     :ok
   end
 
@@ -80,6 +105,10 @@ defmodule Distne.Net.Net do
 
   def handle_call({:set_actuator_array, actuator_array}, _from, state) do
     {:reply, :ok, state(state, actuator_array: actuator_array)}
+  end
+
+  def handle_call({:set_sensor_array, sensor_array}, _from, state) do
+    {:reply, :ok, state(state, sensor_array: sensor_array)}
   end
 
   def handle_cast({:stim, from, amount}, state) do
