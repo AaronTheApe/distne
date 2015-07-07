@@ -17,12 +17,14 @@ defmodule Distne.Net.NetTest do
     {:ok, _con2} = Net.connect(net, hid, out, con2_weight)
     {:ok, actuator_array} = TestProbe.start_link()
     :ok = Net.set_actuator_array(net, actuator_array)
-    input_vector_weight = :random.uniform()
-    input_vector = [input_vector_weight]
-    Net.input_vector(net, input_vector)
-    expected_output_vector = {:output_vector, [:math.erf(con2_weight * :math.erf(con1_weight * input_vector_weight))]}
-    :timer.sleep(1000)
-    assert {:ok, expected_output_vector} == GenServer.call(actuator_array, :received)
+    Enum.each(1..10, fn(_time) ->
+      input_vector_weight = :random.uniform()
+      input_vector = [input_vector_weight]
+      Net.input_vector(net, input_vector)
+      expected_output_vector = {:output_vector, [:math.erf(con2_weight * :math.erf(con1_weight * input_vector_weight))]}
+      :timer.sleep(1000)
+      assert {:ok, expected_output_vector} == GenServer.call(actuator_array, :received)
+   end)
   end
 
 end

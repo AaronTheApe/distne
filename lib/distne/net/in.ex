@@ -32,6 +32,6 @@ defmodule Distne.Net.In do
     Enum.each(sinks, fn(sink) ->
       Stimable.stim(sink, amount)
     end)
-    {:noreply, {State, sinks}}
+    {:noreply, {:state, sinks}}
   end
 end
