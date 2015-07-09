@@ -28,9 +28,9 @@ defmodule Distne.Net.HidTest do
       end)
       sum = Enum.sum(amounts)
       expected_activation_result = :math.erf(sum)
-      :timer.sleep(100)
       Enum.each(sinks, fn(sink) ->
-        assert {:ok, {:stim, pid, expected_activation_result}} == GenServer.call(sink, :received)
+        expected_output_vector = {:stim, pid, expected_activation_result}
+        TestProbe.assert_receive(sink, expected_output_vector, 100)
       end)
     end)
   end

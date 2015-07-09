@@ -4,6 +4,7 @@ defmodule Distne.Net.TestProbe do
   """
   use GenServer
   require Record
+  require ExUnit.Assertions
 
   Record.defrecord State, received: nil, sent: nil
 
@@ -14,6 +15,17 @@ defmodule Distne.Net.TestProbe do
   """
   def start_link() do
     GenServer.start_link(TestProbe, {State, nil, nil})
+  end
+
+  def assert_receive(pid, expected, remaining) do
+    {:ok, received} = GenServer.call(pid, :received)
+    if remaining > 0 && received != expected do
+      :timer.sleep(5)
+      assert_receive(pid, expected, remaining - 5)
+    else
+      as_expected = expected == received
+      ExUnit.Assertions.assert as_expected
+    end
   end
 
   def handle_call(:received, _from, {State, received, sent}) do

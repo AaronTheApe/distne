@@ -22,8 +22,7 @@ defmodule Distne.Net.NetTest do
       input_vector = [input_vector_weight]
       Net.input_vector(net, input_vector)
       expected_output_vector = {:output_vector, [:math.erf(con2_weight * :math.erf(con1_weight * input_vector_weight))]}
-      :timer.sleep(1000)
-      assert {:ok, expected_output_vector} == GenServer.call(actuator_array, :received)
+      TestProbe.assert_receive(actuator_array, expected_output_vector, 100)
    end)
   end
 

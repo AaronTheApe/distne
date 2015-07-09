@@ -15,7 +15,8 @@ defmodule Distne.Net.ConTest do
       Stimable.stim(pid, amount)
       :timer.sleep(1)
       expected_sink_stim_amount = weight * amount
-      assert {:ok, {:stim, pid, expected_sink_stim_amount}} == GenServer.call(sink, :received)
+      expected_sink_stim = {:stim, pid, expected_sink_stim_amount}
+      TestProbe.assert_receive(sink, expected_sink_stim, 100)
     end)
   end
 end

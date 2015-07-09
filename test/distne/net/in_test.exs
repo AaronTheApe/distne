@@ -16,9 +16,9 @@ defmodule Distne.Net.InTest do
     end)
     amount = :random.uniform()
     Stimable.stim(pid, amount)
-    :timer.sleep(100)
     Enum.each(sinks, fn(sink) ->
-      assert {:ok, {:stim, pid, amount}} == GenServer.call(sink, :received)
+      expected_output_vector = {:stim, pid, amount}
+      TestProbe.assert_receive(sink, expected_output_vector, 100)
     end)
   end
 end

@@ -23,8 +23,7 @@ defmodule Distne.Net.OutTest do
       end)
       sum = Enum.sum(amounts)
       expected_activation_result = :math.erf(sum)
-      :timer.sleep(100)
-      assert {:ok, {:stim, pid, expected_activation_result}} == GenServer.call(sink, :received)
+      TestProbe.assert_receive(sink, {:stim, pid, expected_activation_result}, 100)
     end)
   end
 end
