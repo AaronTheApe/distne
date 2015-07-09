@@ -23,8 +23,9 @@ defmodule Distne.Net.TestProbe do
       :timer.sleep(5)
       assert_receive(pid, expected, remaining - 5)
     else
-      as_expected = expected == received
-      ExUnit.Assertions.assert as_expected
+      if expected != received do
+        ExUnit.Assertions.flunk("Testprobe expected to receive: #{inspect expected}, but received: #{inspect received}")
+      end
     end
   end
 
