@@ -8,7 +8,7 @@ defmodule Distne.Method.Neat.Genome do
 
   def initial_genome(num_inputs, num_outputs) do
     inputs = Enum.into(Enum.map(1..num_inputs, fn(x) ->
-      %{node: x, type: :sensor}
+      %NodeGene{node: x, type: :sensor}
     end), HashSet.new)
     outputs = Enum.into(Enum.map(num_inputs + 1 .. num_inputs+num_outputs, fn(x) ->
       %NodeGene{node: x, type: :output}

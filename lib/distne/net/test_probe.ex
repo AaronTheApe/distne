@@ -29,6 +29,16 @@ defmodule Distne.Net.TestProbe do
     end
   end
 
+  def received(pid, remaining) do
+    {:ok, received} = GenServer.call(pid, :received)
+    if remaining > 0 && received == nil do
+      :timer.sleep(5)
+      received(pid, remaining - 5)
+    else
+      received
+    end
+  end
+
   def handle_call(:received, _from, {State, received, sent}) do
     {:reply, {:ok, received}, {State, received, sent}}
   end
