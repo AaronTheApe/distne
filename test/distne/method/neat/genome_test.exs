@@ -3,6 +3,7 @@ defmodule Distne.Method.Neat.GenomeTest do
 
   alias Distne.Method.Neat.Genome, as: Genome
   alias Distne.Method.Neat.IdGen, as: IdGen
+  alias Distne.Method.Neat.ConGene, as: ConGene
 
   test "initial genome is fully connected inputs to outputs" do
     num_inputs = :random.uniform(10)
@@ -85,6 +86,23 @@ defmodule Distne.Method.Neat.GenomeTest do
   end
 
   test "disjoint" do
+    genome_1_innovs = [1,2,3,4,6,7]
+    genome_2_innovs = [1,2,4,5,6,8]
+    genome_1_con_genes = Enum.map(genome_1_innovs, fn(i) ->
+      %ConGene{in: nil, out: nil, weight: nil, enabled: true, innov: i, recursive: false}
+    end)
+    genome_1 = %Genome{con_genes: genome_1_con_genes}
+    genome_2_con_genes = Enum.map(genome_2_innovs, fn(i) ->
+      %ConGene{in: nil, out: nil, weight: nil, enabled: true, innov: i, recursive: false}
+    end)
+    genome_2 = %Genome{con_genes: genome_2_con_genes}
+    {only_in_1, only_in_2} = Genome.disjoint(genome_1, genome_2)
+    only_in_1_innovs = Enum.map(only_in_1, fn(cg) -> cg.innov end)
+    expected_only_in_1_innovs = [3, 7]
+    only_in_2_innovs = Enum.map(only_in_2, fn(cg) -> cg.innov end)
+    expected_only_in_2_innovs = [5]
+    assert expected_only_in_1_innovs == only_in_1_innovs
+    assert expected_only_in_2_innovs == only_in_2_innovs
   end
 
   test "excess" do

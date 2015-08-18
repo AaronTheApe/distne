@@ -105,4 +105,18 @@ defmodule Distne.Method.Neat.Genome do
     IO.puts file, "}"
     System.cmd("dot", ["-Tsvg", "-O", filename])
   end
+
+  def disjoint(g1, g2) do
+    innovs_1 = Enum.map(g1.con_genes, fn(cg) -> cg.innov end)
+    innovs_2 = Enum.map(g2.con_genes, fn(cg) -> cg.innov end)
+    max_innovs_1 = Enum.max(innovs_1)
+    max_innovs_2 = Enum.max(innovs_2)
+    disjoint_1 = Enum.filter(g1.con_genes, fn(cg) ->
+      !Enum.member?(innovs_2, cg.innov) && cg.innov < max_innovs_2
+    end)
+    disjoint_2 = Enum.filter(g2.con_genes, fn(cg) ->
+      !Enum.member?(innovs_1, cg.innov) && cg.innov < max_innovs_1
+    end)
+    {disjoint_1, disjoint_2}
+  end
 end
