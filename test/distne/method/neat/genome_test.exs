@@ -125,7 +125,20 @@ defmodule Distne.Method.Neat.GenomeTest do
     assert expected_excess_in_2_innovs == excess_in_2_innovs
   end
 
-  test "average weight" do
+  test "average weight difference" do
+    genome_1_innovs_and_weights = [{1, 3.5}, {3, 5.6}, {5, -15.2}]
+    genome_2_innovs_and_weights = [{2, 4.2}, {3, -3.0}, {4, 1.5}, {5, 7.3}, {6, 1.0}]
+    genome_1_con_genes = Enum.map(genome_1_innovs_and_weights, fn({i, w}) ->
+      %ConGene{in: nil, out: nil, weight: w, enabled: true, innov: i, recursive: false}
+    end)
+    genome_1 = %Genome{con_genes: genome_1_con_genes}
+    genome_2_con_genes = Enum.map(genome_2_innovs_and_weights, fn({i, w}) ->
+      %ConGene{in: nil, out: nil, weight: w, enabled: true, innov: i, recursive: false}
+    end)
+    genome_2 = %Genome{con_genes: genome_2_con_genes}
+    expected_avg_weight_diff = (abs(5.6 - (-3.0)) + abs(-15.2 - 7.3)) / 2.0
+    actual_avg_weight_diff = Genome.avg_weight_diff(genome_1, genome_2)
+    assert expected_avg_weight_diff == actual_avg_weight_diff
   end
 
   test "adjusted fitness" do

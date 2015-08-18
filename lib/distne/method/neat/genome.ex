@@ -133,4 +133,24 @@ defmodule Distne.Method.Neat.Genome do
     end)
     {excess_1, excess_2}
   end
+
+  defp matching(g1, g2) do
+    innovs_1 = Enum.map(g1.con_genes, fn(cg) -> cg.innov end)
+    innovs_2 = Enum.map(g2.con_genes, fn(cg) -> cg.innov end)
+    common_genes_1 = Enum.filter(g1.con_genes, fn(cg) ->
+      Enum.member?(innovs_2, cg.innov)
+    end)
+    common_genes_2 = Enum.filter(g2.con_genes, fn(cg) ->
+      Enum.member?(innovs_1, cg.innov)
+    end)
+    {common_genes_1, common_genes_2}
+  end
+
+  def avg_weight_diff(g1, g2) do
+    {m1, m2} = matching(g1, g2)
+    Enum.sum(
+      Enum.map(Enum.zip(m1, m2), fn({cg1, cg2}) ->
+        abs(cg1.weight - cg2.weight)
+      end)) / Enum.count(m1)
+  end
 end
