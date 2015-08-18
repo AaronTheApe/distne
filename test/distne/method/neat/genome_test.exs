@@ -59,9 +59,9 @@ defmodule Distne.Method.Neat.GenomeTest do
     next_innov_num = 56
     {:ok, id_gen} = IdGen.start_link(next_node_id, next_innov_num)
     initial_genome = Genome.initial_genome(num_inputs, num_outputs)
-    Genome.draw(initial_genome, "draw_before_add_node")
+    #Genome.draw(initial_genome, "draw_before_add_node")
     mutated_genome = Genome.add_node(initial_genome, id_gen)
-    Genome.draw(mutated_genome, "draw_after_add_node")
+    #Genome.draw(mutated_genome, "draw_after_add_node")
     assert Enum.count(initial_genome.con_genes) + 2 == Enum.count(mutated_genome.con_genes)
     assert Enum.count(initial_genome.node_genes) + 1 == Enum.count(mutated_genome.node_genes)
   end
@@ -73,9 +73,9 @@ defmodule Distne.Method.Neat.GenomeTest do
     next_innov_num = 56
     {:ok, id_gen} = IdGen.start_link(next_node_id, next_innov_num)
     initial_genome = Genome.initial_genome(num_inputs, num_outputs)
-    Genome.draw(initial_genome, "draw_before_add_con")
+    #Genome.draw(initial_genome, "draw_before_add_con")
     mutated_genome = Genome.add_con(initial_genome, id_gen)
-    Genome.draw(mutated_genome, "draw_after_add_con")
+    #Genome.draw(mutated_genome, "draw_after_add_con")
   end
 
   test "cross" do
