@@ -59,10 +59,8 @@ defmodule Distne.Method.Neat.GenomeTest do
     next_innov_num = 56
     {:ok, id_gen} = IdGen.start_link(next_node_id, next_innov_num)
     initial_genome = Genome.initial_genome(num_inputs, num_outputs)
-    #IO.inspect initial_genome
     Genome.draw(initial_genome, "draw_before_add_node")
     mutated_genome = Genome.add_node(initial_genome, id_gen)
-    #IO.inspect mutated_genome
     Genome.draw(mutated_genome, "draw_after_add_node")
     assert Enum.count(initial_genome.con_genes) + 2 == Enum.count(mutated_genome.con_genes)
     assert Enum.count(initial_genome.node_genes) + 1 == Enum.count(mutated_genome.node_genes)
@@ -75,10 +73,8 @@ defmodule Distne.Method.Neat.GenomeTest do
     next_innov_num = 56
     {:ok, id_gen} = IdGen.start_link(next_node_id, next_innov_num)
     initial_genome = Genome.initial_genome(num_inputs, num_outputs)
-    #IO.inspect initial_genome
     Genome.draw(initial_genome, "draw_before_add_con")
     mutated_genome = Genome.add_con(initial_genome, id_gen)
-    #IO.inspect mutated_genome
     Genome.draw(mutated_genome, "draw_after_add_con")
   end
 
@@ -139,6 +135,29 @@ defmodule Distne.Method.Neat.GenomeTest do
     expected_avg_weight_diff = (abs(5.6 - (-3.0)) + abs(-15.2 - 7.3)) / 2.0
     actual_avg_weight_diff = Genome.avg_weight_diff(genome_1, genome_2)
     assert expected_avg_weight_diff == actual_avg_weight_diff
+  end
+
+  test "distance" do
+    genome_1_innovs_and_weights = [{1, 3.5}, {3, 5.6}, {5, -15.2}]
+    genome_2_innovs_and_weights = [{2, 4.2}, {3, -3.0}, {4, 1.5}, {5, 7.3}, {6, 1.0}]
+    genome_1_con_genes = Enum.map(genome_1_innovs_and_weights, fn({i, w}) ->
+      %ConGene{in: nil, out: nil, weight: w, enabled: true, innov: i, recursive: false}
+    end)
+    genome_1 = %Genome{con_genes: genome_1_con_genes}
+    genome_2_con_genes = Enum.map(genome_2_innovs_and_weights, fn({i, w}) ->
+      %ConGene{in: nil, out: nil, weight: w, enabled: true, innov: i, recursive: false}
+    end)
+    genome_2 = %Genome{con_genes: genome_2_con_genes}
+    w = (abs(5.6 - (-3.0)) + abs(-15.2 - 7.3)) / 2.0
+    n = 5
+    e = 1
+    d = 3
+    c1 = Application.get_env(:neat, :c1)
+    c2 = Application.get_env(:neat, :c2)
+    c3 = Application.get_env(:neat, :c3)
+    expected_distance = c1*e/n + c2*d/n + c3*w
+    actual_distance = Genome.distance(genome_1, genome_2)
+    assert expected_distance == actual_distance
   end
 
   test "adjusted fitness" do

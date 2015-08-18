@@ -23,4 +23,7 @@ use Mix.Config
 #
 #     import_config "#{Mix.env}.exs"
 config :neat,
-  :add_node_prob, 0.1 
+  add_node_prob: 0.1,
+  c1: 2.0,
+  c2: 3.0,
+  c3: 4.0

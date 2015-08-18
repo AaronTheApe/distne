@@ -19,7 +19,6 @@ defmodule Distne.Method.Neat.Genome do
         %ConGene{in: input.node, out: output.node, weight: :random.uniform(10), enabled: true, innov: 1, recursive: false}
       end)
     end)
-    IO.puts Enum.count(con_genes_out_of_set)
     con_genes =
       Enum.into(
         con_genes_out_of_set,
@@ -152,5 +151,18 @@ defmodule Distne.Method.Neat.Genome do
       Enum.map(Enum.zip(m1, m2), fn({cg1, cg2}) ->
         abs(cg1.weight - cg2.weight)
       end)) / Enum.count(m1)
+  end
+
+  def distance(g1, g2) do
+    c1 = Application.get_env(:neat, :c1)
+    c2 = Application.get_env(:neat, :c2)
+    c3 = Application.get_env(:neat, :c3)
+    {e1, e2} = excess(g1, g2)
+    e = max(Enum.count(e1), Enum.count(e2))
+    {d1, d2} = disjoint(g1, g2)
+    d = Enum.count(d1) + Enum.count(d2)
+    n = max(Enum.count(g1.con_genes), Enum.count(g2.con_genes))
+    w = avg_weight_diff(g1, g2)
+    c1*e/n + c2*d/n + c3*w
   end
 end
