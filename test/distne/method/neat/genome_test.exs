@@ -106,6 +106,23 @@ defmodule Distne.Method.Neat.GenomeTest do
   end
 
   test "excess" do
+    genome_1_innovs = [1,2,3,4,6,7,9,10]
+    genome_2_innovs = [1,2,4,5,6,8]
+    genome_1_con_genes = Enum.map(genome_1_innovs, fn(i) ->
+      %ConGene{in: nil, out: nil, weight: nil, enabled: true, innov: i, recursive: false}
+    end)
+    genome_1 = %Genome{con_genes: genome_1_con_genes}
+    genome_2_con_genes = Enum.map(genome_2_innovs, fn(i) ->
+      %ConGene{in: nil, out: nil, weight: nil, enabled: true, innov: i, recursive: false}
+    end)
+    genome_2 = %Genome{con_genes: genome_2_con_genes}
+    {excess_in_1, excess_in_2} = Genome.excess(genome_1, genome_2)
+    excess_in_1_innovs = Enum.map(excess_in_1, fn(cg) -> cg.innov end)
+    expected_excess_in_1_innovs = [9,10]
+    excess_in_2_innovs = Enum.map(excess_in_2, fn(cg) -> cg.innov end)
+    expected_excess_in_2_innovs = []
+    assert expected_excess_in_1_innovs == excess_in_1_innovs
+    assert expected_excess_in_2_innovs == excess_in_2_innovs
   end
 
   test "average weight" do
