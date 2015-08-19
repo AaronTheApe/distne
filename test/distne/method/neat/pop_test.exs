@@ -6,7 +6,7 @@ defmodule Distne.Method.Neat.PopTest do
   alias Distne.Method.Neat.ConGene, as: ConGene
   alias Distne.Method.Neat.Pop, as: Pop
 
-  test "initial pop hax size genomes" do
+  test "initial pop has size genomes" do
     size = 10
     num_inputs = 5
     num_outputs = 7

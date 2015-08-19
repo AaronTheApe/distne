@@ -48,7 +48,7 @@ defmodule Distne.Net.Net do
     Stimulates `net` with input vector `v`
   """
   def input_vector(net, v) do
-    GenServer.call(net, {:input_vector, v})
+    GenServer.cast(net, {:input_vector, v})
   end
 
   @doc """
@@ -95,12 +95,12 @@ defmodule Distne.Net.Net do
     {:reply, {:ok, con}, state(state, cons: Set.put(state(state, :cons), con))}
   end
 
-  def handle_call({:input_vector, v}, _from, state) do
+  def handle_cast({:input_vector, v}, state) do
     zip = Enum.zip(state(state, :ins), v)
     Enum.each(zip, fn {i, iv} ->
       GenServer.cast(i, {:stim, self(), iv})
     end)
-    {:reply, :ok, state}
+    {:noreply, state}
   end
 
   def handle_call({:set_actuator_array, actuator_array}, _from, state) do
@@ -119,7 +119,7 @@ defmodule Distne.Net.Net do
       output_vector = Enum.map(state(state, :outs), fn(out) ->
         new_received[out]
       end)
-      GenServer.call(state(state, :actuator_array), {:output_vector, output_vector})
+      GenServer.cast(state(state, :actuator_array), {:output_vector, output_vector})
       {:noreply, state(state, pending: state(state, :outs), received: %{})}
     else
       {:noreply, state(state, pending: new_pending, received: new_received)}

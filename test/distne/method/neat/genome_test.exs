@@ -4,6 +4,8 @@ defmodule Distne.Method.Neat.GenomeTest do
   alias Distne.Method.Neat.Genome, as: Genome
   alias Distne.Method.Neat.IdGen, as: IdGen
   alias Distne.Method.Neat.ConGene, as: ConGene
+  alias Distne.Net.Net, as: Net
+  alias Distne.Net.TestProbe, as: TestProbe
 
   test "initial genome is fully connected inputs to outputs" do
     num_inputs = :random.uniform(10)
@@ -50,6 +52,21 @@ defmodule Distne.Method.Neat.GenomeTest do
           HashSet.new
         )
       )
+  end
+
+  test "initial_genome develops into functioning network" do
+    num_inputs = :random.uniform(5)
+    num_outputs = :random.uniform(5)
+    initial_genome = Genome.initial_genome(num_inputs, num_outputs)
+    {:ok, net} = Genome.develop(initial_genome)
+    {:ok, nc} = TestProbe.start_link()
+    Net.set_actuator_array(net, nc)
+    input_vector = Enum.map(1..num_inputs, fn(_) ->
+      :random.uniform()
+    end)
+    Net.input_vector(net, input_vector)
+    {:output_vector, output_vector} = TestProbe.received(nc, 100)
+    IO.inspect output_vector
   end
 
   test "add node mutation test" do

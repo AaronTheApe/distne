@@ -5,6 +5,7 @@ defmodule Distne.Method.Neat.Genome do
   alias Distne.Method.Neat.IdGen, as: IdGen
   alias Distne.Method.Neat.ConGene, as: ConGene
   alias Distne.Method.Neat.NodeGene, as: NodeGene
+  alias Distne.Net.Net, as: Net
 
   def initial_genome(num_inputs, num_outputs) do
     inputs = Enum.into(Enum.map(1..num_inputs, fn(x) ->
@@ -16,7 +17,8 @@ defmodule Distne.Method.Neat.Genome do
     node_genes = HashSet.union(inputs, outputs)
     con_genes_out_of_set = Enum.flat_map(inputs, fn(input) ->
       Enum.map(outputs, fn(output) ->
-        %ConGene{in: input.node, out: output.node, weight: :random.uniform(10), enabled: true, innov: 1, recursive: false}
+        weight = (:rand.uniform() - 0.5) * 10.0
+        %ConGene{in: input.node, out: output.node, weight: weight , enabled: true, innov: 1, recursive: false}
       end)
     end)
     con_genes =
@@ -164,5 +166,29 @@ defmodule Distne.Method.Neat.Genome do
     n = max(Enum.count(g1.con_genes), Enum.count(g2.con_genes))
     w = avg_weight_diff(g1, g2)
     c1*e/n + c2*d/n + c3*w
+  end
+
+  def develop(genome) do
+    {:ok, net} = Net.start_link()
+
+    nodes = Enum.into(Enum.map(genome.node_genes, fn(ng) ->
+      case ng.type do
+        :sensor ->
+          {:ok, input} = Net.add_in(net)
+          {ng.node, input}
+        :hidden ->
+          {:ok, hidden} = Net.add_hid(net)
+          {ng.node, hidden}
+        :output ->
+          {:ok, output} = Net.add_out(net)
+          {ng.node, output}
+      end
+    end), %{})
+
+    Enum.map(genome.con_genes, fn(cg) ->
+      Net.connect(net, Map.get(nodes, cg.in), Map.get(nodes, cg.out), cg.weight)
+    end)
+
+    {:ok, net}
   end
 end
