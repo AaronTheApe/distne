@@ -29,7 +29,7 @@ defmodule Distne.Method.Neat.Genome do
   end
 
   def add_node(genome, id_gen) do
-    con_to_disable = Enum.at(genome.con_genes, :random.uniform(HashSet.size(genome.con_genes) - 1))
+    con_to_disable = Enum.at(genome.con_genes, :rand.uniform(HashSet.size(genome.con_genes) - 1))
     disabled_con = %ConGene{con_to_disable | enabled: false}
     {:ok, node_id} = IdGen.node_id(id_gen, con_to_disable.in, con_to_disable.out)
     new_node_gene = %NodeGene{node: node_id, type: :hidden}
@@ -64,8 +64,8 @@ defmodule Distne.Method.Neat.Genome do
     potential_cons =
       Stream.repeatedly(
         fn ->
-          {Enum.at(potential_ins, :random.uniform(length(potential_ins))),
-           Enum.at(potential_outs, :random.uniform(length(potential_outs)))}
+          {Enum.at(potential_ins, :rand.uniform(length(potential_ins))),
+           Enum.at(potential_outs, :rand.uniform(length(potential_outs)))}
        end)
     existing_cons = Enum.map(genome.con_genes, fn(x) ->
       {x.in, x.out}
@@ -76,7 +76,7 @@ defmodule Distne.Method.Neat.Genome do
       end)
     end)
     {:ok, innov_num} = IdGen.innov_num(id_gen, input, output)
-    new_con_gene = %ConGene{in: input, out: output, weight: :random.uniform, enabled: true, innov: innov_num, recursive: false}
+    new_con_gene = %ConGene{in: input, out: output, weight: :rand.uniform, enabled: true, innov: innov_num, recursive: false}
     new_con_genes = HashSet.put(genome.con_genes, new_con_gene)
     %Genome{node_genes: node_genes, con_genes: new_con_genes}
   end

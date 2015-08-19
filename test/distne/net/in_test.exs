@@ -14,7 +14,7 @@ defmodule Distne.Net.InTest do
     Enum.each(sinks, fn(sink) ->
       In.add_sink(pid, sink)
     end)
-    amount = :random.uniform()
+    amount = :rand.uniform()
     Stimable.stim(pid, amount)
     Enum.each(sinks, fn(sink) ->
       expected_output_vector = {:stim, pid, amount}

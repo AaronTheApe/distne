@@ -24,7 +24,7 @@ defmodule Distne.Task.BitParity.BitParityNeuroControllerTest do
   test "BitParityNeuroController receives output vector, and casts them as bits(0 -> 0.1 and 1 -> 0.2) to task" do
     {:ok, net} = TestProbe.start_link()
     {:ok, task} = TestProbe.start_link()
-    output = :random.uniform()
+    output = :rand.uniform()
     output_vector = [output]
     {:ok, nc} = BitParityNeuroController.start_link(net, task)
     BitParityNeuroController.output_vector(nc, output_vector)

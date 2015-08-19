@@ -14,7 +14,7 @@ defmodule Distne.Task.BitParity.BitParityTaskTest do
     {:bits, bits} = TestProbe.received(nc, 100)
     assert Enum.count(bits) > 0
     perform_success =
-      if :random.uniform() > 0.5 do
+      if :rand.uniform() > 0.5 do
         true
       else
         false

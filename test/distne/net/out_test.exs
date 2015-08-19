@@ -17,7 +17,7 @@ defmodule Distne.Net.OutTest do
     end)
     Enum.each(1..10, fn(_) ->
       amounts = Enum.map(sources, fn(source) ->
-        amount = :random.uniform()
+        amount = :rand.uniform()
         GenServer.call(source, {:send, pid, {:stim, source, amount}})
         amount
       end)

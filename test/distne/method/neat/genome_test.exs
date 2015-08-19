@@ -8,8 +8,8 @@ defmodule Distne.Method.Neat.GenomeTest do
   alias Distne.Net.TestProbe, as: TestProbe
 
   test "initial genome is fully connected inputs to outputs" do
-    num_inputs = :random.uniform(10)
-    num_outputs = :random.uniform(10)
+    num_inputs = :rand.uniform(10)
+    num_outputs = :rand.uniform(10)
     initial_genome = Genome.initial_genome(num_inputs, num_outputs)
     assert num_inputs + num_outputs ==  Set.size(initial_genome.node_genes)
     assert num_inputs + num_outputs ==
@@ -55,14 +55,14 @@ defmodule Distne.Method.Neat.GenomeTest do
   end
 
   test "initial_genome develops into functioning network" do
-    num_inputs = :random.uniform(5)
-    num_outputs = :random.uniform(5)
+    num_inputs = :rand.uniform(5)
+    num_outputs = :rand.uniform(5)
     initial_genome = Genome.initial_genome(num_inputs, num_outputs)
     {:ok, net} = Genome.develop(initial_genome)
     {:ok, nc} = TestProbe.start_link()
     Net.set_actuator_array(net, nc)
     input_vector = Enum.map(1..num_inputs, fn(_) ->
-      :random.uniform()
+      :rand.uniform()
     end)
     Net.input_vector(net, input_vector)
     {:output_vector, output_vector} = TestProbe.received(nc, 100)
@@ -70,8 +70,8 @@ defmodule Distne.Method.Neat.GenomeTest do
   end
 
   test "add node mutation test" do
-    num_inputs = :random.uniform(10)
-    num_outputs = :random.uniform(10)
+    num_inputs = :rand.uniform(10)
+    num_outputs = :rand.uniform(10)
     next_node_id = 23
     next_innov_num = 56
     {:ok, id_gen} = IdGen.start_link(next_node_id, next_innov_num)
@@ -84,8 +84,8 @@ defmodule Distne.Method.Neat.GenomeTest do
   end
 
   test "add con mutation test" do
-    num_inputs = :random.uniform(10)
-    num_outputs = :random.uniform(10)
+    num_inputs = :rand.uniform(10)
+    num_outputs = :rand.uniform(10)
     next_node_id = 23
     next_innov_num = 56
     {:ok, id_gen} = IdGen.start_link(next_node_id, next_innov_num)
@@ -181,8 +181,8 @@ defmodule Distne.Method.Neat.GenomeTest do
   end
 
   test "draw graph" do
-    # num_inputs = :random.uniform(10)
-    # num_outputs = :random.uniform(10)
+    # num_inputs = :rand.uniform(10)
+    # num_outputs = :rand.uniform(10)
     # initial_genome = Genome.initial_genome(num_inputs, num_outputs)
     # Genome.draw(initial_genome, "draw")
   end
