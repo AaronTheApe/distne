@@ -10,7 +10,8 @@ defmodule Distne.Method.Neat.GenomeTest do
   test "initial genome is fully connected inputs to outputs" do
     num_inputs = :rand.uniform(10)
     num_outputs = :rand.uniform(10)
-    initial_genome = Genome.initial_genome(num_inputs, num_outputs)
+    id = :rand.uniform(10)
+    initial_genome = Genome.initial_genome(id, num_inputs, num_outputs)
     assert num_inputs + num_outputs ==  Set.size(initial_genome.node_genes)
     assert num_inputs + num_outputs ==
       HashSet.size(
@@ -57,7 +58,8 @@ defmodule Distne.Method.Neat.GenomeTest do
   test "initial_genome develops into functioning network" do
     num_inputs = :rand.uniform(5)
     num_outputs = :rand.uniform(5)
-    initial_genome = Genome.initial_genome(num_inputs, num_outputs)
+    id = :rand.uniform(10)
+    initial_genome = Genome.initial_genome(id, num_inputs, num_outputs)
     {:ok, net} = Genome.develop(initial_genome)
     {:ok, nc} = TestProbe.start_link()
     Net.set_actuator_array(net, nc)
@@ -65,8 +67,8 @@ defmodule Distne.Method.Neat.GenomeTest do
       :rand.uniform()
     end)
     Net.input_vector(net, input_vector)
-    {:output_vector, output_vector} = TestProbe.received(nc, 100)
-    IO.inspect output_vector
+    {:output_vector, _output_vector} = TestProbe.received(nc, 100)
+    #IO.inspect output_vector
   end
 
   test "add node mutation test" do
@@ -75,7 +77,8 @@ defmodule Distne.Method.Neat.GenomeTest do
     next_node_id = 23
     next_innov_num = 56
     {:ok, id_gen} = IdGen.start_link(next_node_id, next_innov_num)
-    initial_genome = Genome.initial_genome(num_inputs, num_outputs)
+    id = :rand.uniform(10)
+    initial_genome = Genome.initial_genome(id, num_inputs, num_outputs)
     #Genome.draw(initial_genome, "draw_before_add_node")
     mutated_genome = Genome.add_node(initial_genome, id_gen)
     #Genome.draw(mutated_genome, "draw_after_add_node")
@@ -89,9 +92,10 @@ defmodule Distne.Method.Neat.GenomeTest do
     next_node_id = 23
     next_innov_num = 56
     {:ok, id_gen} = IdGen.start_link(next_node_id, next_innov_num)
-    initial_genome = Genome.initial_genome(num_inputs, num_outputs)
+    id = :rand.uniform(10)
+    initial_genome = Genome.initial_genome(id, num_inputs, num_outputs)
     #Genome.draw(initial_genome, "draw_before_add_con")
-    mutated_genome = Genome.add_con(initial_genome, id_gen)
+    _mutated_genome = Genome.add_con(initial_genome, id_gen)
     #Genome.draw(mutated_genome, "draw_after_add_con")
   end
 

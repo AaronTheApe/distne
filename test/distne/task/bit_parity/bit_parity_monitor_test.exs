@@ -9,7 +9,7 @@ defmodule Distne.Task.BitParity.BitParityMonitorTest do
     {:ok, net} = TestProbe.start_link()
     {:ok, fit_mon} = TestProbe.start_link()
     {:ok, monitor} = BitParityMonitor.start_link(size, net, fit_mon)
-    {:input_vector, [bias, bit1, bit2]} = TestProbe.received(net, 100)
+    {:input_vector, [_bias, _bit1, _bit2]} = TestProbe.received(net, 100)
     GenServer.cast(monitor, {:success, true})
     TestProbe.assert_receive(fit_mon, {:fitness, net, 1.0}, 100)
   end

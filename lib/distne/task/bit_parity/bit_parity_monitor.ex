@@ -8,6 +8,7 @@ defmodule Distne.Task.BitParity.BitParityMonitor do
   alias Distne.Task.BitParity.BitParityTask, as: BitParityTask
   alias Distne.Task.BitParity.BitParityMonitor, as: BitParityMonitor
   alias Distne.Task.BitParity.BitParityNeuroController, as: BitParityNeuroController
+  alias Distne.Net.Net, as: Net
 
   def start_link(size, net, fit_mon) do
     {:ok, mon} = GenServer.start_link(BitParityMonitor, %State{net: net, fit_mon: fit_mon})
@@ -18,6 +19,7 @@ defmodule Distne.Task.BitParity.BitParityMonitor do
   def handle_cast({:create_task, size}, state) do
     {:ok, task} = BitParityTask.start_link(size, self)
     {:ok, nc} = BitParityNeuroController.start_link(state.net, task)
+    Net.set_actuator_array(state.net, nc)
     BitParityTask.begin(task, nc)
     {:noreply, %State{state | task: task, nc: nc}}
   end

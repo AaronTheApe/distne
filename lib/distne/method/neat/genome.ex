@@ -1,5 +1,5 @@
 defmodule Distne.Method.Neat.Genome do
-  defstruct con_genes: HashSet.new, node_genes: HashSet.new
+  defstruct id: nil, con_genes: HashSet.new, node_genes: HashSet.new
 
   alias Distne.Method.Neat.Genome, as: Genome
   alias Distne.Method.Neat.IdGen, as: IdGen
@@ -7,11 +7,11 @@ defmodule Distne.Method.Neat.Genome do
   alias Distne.Method.Neat.NodeGene, as: NodeGene
   alias Distne.Net.Net, as: Net
 
-  def initial_genome(num_inputs, num_outputs) do
-    inputs = Enum.into(Enum.map(1..num_inputs, fn(x) ->
+  def initial_genome(id, num_inputs, num_outputs) do
+    inputs = Enum.into(Enum.map(0..num_inputs-1, fn(x) ->
       %NodeGene{node: x, type: :sensor}
     end), HashSet.new)
-    outputs = Enum.into(Enum.map(num_inputs + 1 .. num_inputs+num_outputs, fn(x) ->
+    outputs = Enum.into(Enum.map(num_inputs .. num_inputs+num_outputs-1, fn(x) ->
       %NodeGene{node: x, type: :output}
     end), HashSet.new)
     node_genes = HashSet.union(inputs, outputs)
@@ -21,11 +21,15 @@ defmodule Distne.Method.Neat.Genome do
         %ConGene{in: input.node, out: output.node, weight: weight , enabled: true, innov: 1, recursive: false}
       end)
     end)
+    con_genes_with_innovs =
+      Enum.with_index(con_genes_out_of_set) |> Enum.map(fn({con, i}) ->
+          %ConGene{con | innov: i}
+      end)
     con_genes =
       Enum.into(
         con_genes_out_of_set,
         HashSet.new)
-    %Genome{node_genes: node_genes, con_genes: con_genes}
+    %Genome{id: id, node_genes: node_genes, con_genes: con_genes}
   end
 
   def add_node(genome, id_gen) do

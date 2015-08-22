@@ -9,7 +9,7 @@ defmodule Distne.Method.Neat.IdGenTest do
     {:ok, pid} = IdGen.start_link(next_node_id, next_innov_num)
     con_in = 2
     con_out = 3
-    expected_innov_num = next_innov_num
+    #expected_innov_num = next_innov_num
     {:ok, innov_num} = IdGen.innov_num(pid, con_in, con_out)
     assert next_innov_num == innov_num
     con_2_in = 3
@@ -26,7 +26,7 @@ defmodule Distne.Method.Neat.IdGenTest do
     {:ok, pid} = IdGen.start_link(next_node_id, next_innov_num)
     con_in = 2
     con_out = 3
-    expected_node_id = next_node_id
+    #expected_node_id = next_node_id
     {:ok, node_id} = IdGen.node_id(pid, con_in, con_out)
     assert next_node_id == node_id
     con_2_in = 3
