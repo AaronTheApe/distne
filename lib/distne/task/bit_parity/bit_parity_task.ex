@@ -9,7 +9,11 @@ defmodule Distne.Task.BitParity.BitParityTask do
 
   def start_link(size, monitor) do
     bits = Enum.map(1..size, fn(_) ->
-      :random.uniform(size)
+      if :rand.uniform > 0.5 do
+        1
+      else
+        0
+      end
     end)
     GenServer.start_link(BitParityTask, state(bits: bits, monitor: monitor))
   end

@@ -8,6 +8,7 @@ defmodule Distne.Lab.Tech do
   alias Distne.Lab.Tech, as: Tech
   alias Distne.Lab.TreatmentSupervisor, as: TreatmentSupervisor
   alias Distne.Lab.Lab, as: Lab
+  alias Distne.Lab.ExperimentResult, as: ExperimentResult
 
   #API
   def start_link(lab) do
@@ -53,6 +54,7 @@ defmodule Distne.Lab.Tech do
   end
 
   def handle_cast({:perform_experiment, experiment}, state) do
+    IO.puts "[Tech] Performing experiment #{experiment.name}..."
     [first_treatment|remaining_treatments] = experiment.treatments
     TreatmentSupervisor.perform_treatment(state.treatment_supervisor, first_treatment, experiment.task, experiment.sample_size)
     {:noreply, %State{state|experiment: experiment, remaining_treatments: remaining_treatments}}
@@ -72,7 +74,8 @@ defmodule Distne.Lab.Tech do
       TreatmentSupervisor.perform_treatment(state.treatment_supervisor, next_treatment, state.experiment.task, state.experiment.sample_size)
       {:noreply, %State{state|remaining_treatments: remaining_treatments, treatment_results: [treatment_result|state.treatment_results]}}
     else
-      Lab.performed_experiment(state.lab, [treatment_result | state.treatment_results])
+
+      Lab.performed_experiment(state.lab, %ExperimentResult{treatment_results: [treatment_result|state.treatment_results]})
       {:noreply, state}
     end
   end

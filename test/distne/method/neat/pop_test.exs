@@ -44,14 +44,14 @@ defmodule Distne.Method.Neat.PopTest do
   end
 
   test "evolve" do
-    {:ok, evo_mon} = TestProbe.start_link()
-    size = 100
-    num_inputs = 2
-    num_outputs = 1
-    init_spec_threshold = 10
-    task = {:bit_parity, 1}
-    {:ok, pop} = Pop.start_link(evo_mon, size, task, num_inputs, num_outputs, init_spec_threshold)
-    Pop.next_gen(pop)
-    :timer.sleep(10000)
+    # {:ok, evo_mon} = TestProbe.start_link()
+    # size = 100
+    # num_inputs = 2
+    # num_outputs = 1
+    # init_spec_threshold = 10
+    # task = {:bit_parity, 1}
+    # {:ok, pop} = Pop.start_link(evo_mon, size, task, num_inputs, num_outputs, init_spec_threshold)
+    # Pop.next_gen(pop)
+    # :timer.sleep(10000)
   end
 end

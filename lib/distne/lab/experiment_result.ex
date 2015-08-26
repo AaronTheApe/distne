@@ -5,7 +5,8 @@ defmodule Distne.Lab.ExperimentResult do
   alias Distne.Lab.TreatmentResult, as: TreatmentResult
 
   def puts(experiment_result) do
-    IO.puts "treatment_name, cpu_time, generations, tasks"
+
+    IO.puts "\n\nname, cpu_time, gens, tasks\n"
     Enum.each(experiment_result.treatment_results, fn(ts) ->
       TreatmentResult.puts(ts)
     end)

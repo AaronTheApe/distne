@@ -5,6 +5,6 @@ defmodule Distne.Lab.TreatmentResult do
     IO.puts "#{treatment_result.treatment_name}, " <>
       "#{treatment_result.cpu_time}, " <>
       "#{treatment_result.generations}, " <>
-      "#{treatment_result.tasks}"
+      "#{treatment_result.tasks}\n"
   end
 end

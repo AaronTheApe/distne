@@ -125,4 +125,8 @@ defmodule Distne.Net.Net do
       {:noreply, state(state, pending: new_pending, received: new_received)}
     end
   end
+
+  def handle_call(:stop, _from, state) do
+    {:stop, :normal, :ok, state}
+  end
 end

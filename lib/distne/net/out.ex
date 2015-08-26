@@ -6,7 +6,7 @@ defmodule Distne.Net.Out do
 
   require Record
   Record.defrecordp :state, sources: HashSet.new, sink: nil, pending: HashSet.new, sum: 0.0
-  
+
   alias Distne.Net.Out, as: Out
   alias Distne.Net.Stimable, as: Stimable
 
@@ -18,7 +18,7 @@ defmodule Distne.Net.Out do
   end
 
   @doc """
-  Sets PID `pid` as the sink the Out with PID `pid` 
+  Sets PID `pid` as the sink the Out with PID `pid`
   """
   def set_sink(pid, sink) do
     GenServer.call(pid, {:set_sink, sink})

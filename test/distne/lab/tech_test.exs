@@ -52,10 +52,4 @@ defmodule Distne.Lab.TechTest do
     Tech.performed_treatment(tech, treatment_result)
     TestProbe.assert_receive(lab, {:performed_experiment, [treatment_result, treatment_result]}, 100)
   end
-
-  test "On completion of a treatment, treatment_result is added to treatment_results, and next treatment is delegated" do
-    # {:ok, lab} = TestProbe.start_link
-    # {:ok, tech} = Tech.start_link(lab)
-    # {:ok, treatment_supervisor} = TestProbe.start_link
-  end
 end

@@ -34,4 +34,8 @@ defmodule Distne.Task.BitParity.BitParityMonitor do
     GenServer.cast(state.fit_mon, {:fitness, state.net, fitness})
     {:noreply, state}
   end
+
+  def handle_call(:stop, _from, state) do
+    {:stop, :normal, :ok, state}
+  end
 end

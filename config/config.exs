@@ -27,3 +27,9 @@ config :neat,
   c1: 2.0,
   c2: 3.0,
   c3: 4.0
+
+config :sane,
+  min_label: 0,
+  max_label: 255,
+  min_init_weight: -10.0,
+  max_init_weight: 10.0 

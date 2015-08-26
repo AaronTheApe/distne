@@ -7,6 +7,7 @@ defmodule Distne.Lab.Lab do
 
   alias Distne.Lab.Lab, as: Lab
   alias Distne.Lab.Tech, as: Tech
+  alias Distne.Lab.ExperimentResult, as: ExperimentResult
 
   #API
   def start_link do
@@ -35,6 +36,7 @@ defmodule Distne.Lab.Lab do
 
   #GenServer Callbacks
   def init(args) do
+    IO.puts "Constructing Lab..."
     {:ok, tech} = Tech.start_link(self)
     {:ok, %State{tech: tech}}
   end
@@ -52,11 +54,13 @@ defmodule Distne.Lab.Lab do
   end
 
   def handle_cast({:perform_experiment, experiment}, state) do
+    IO.puts "Performing experiment #{experiment.name}..."
     Tech.perform_experiment(state.tech, experiment)
     {:noreply, state}
   end
 
   def handle_cast({:performed_experiment, experiment_result}, state) do
+    ExperimentResult.puts(experiment_result)
     {:noreply, %State{state|experiment_results:
       [experiment_result|state.experiment_results]}}
   end
