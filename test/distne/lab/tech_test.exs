@@ -33,10 +33,29 @@ defmodule Distne.Lab.TechTest do
     {:ok, actual_experiment} = Tech.get_experiment(tech)
     assert experiment == actual_experiment
     [first_treatment|rest] = experiment.treatments
-    TestProbe.assert_receive(treatment_supervisor, {:perform_treatment, first_treatment}, 100)
+    TestProbe.assert_receive(treatment_supervisor, {:perform_treatment, first_treatment, experiment.task, experiment.sample_size}, 100)
     assert {:ok, rest} == Tech.get_remaining_treatments(tech)
+    treatment_name = "rwg"
+    cpu_time = 133.7
+    generations = 78
+    tasks = 523
+    treatment_result =
+      %TreatmentResult{
+        treatment_name: treatment_name,
+        cpu_time: cpu_time,
+        generations: generations,
+        tasks: tasks
+      }
+    Tech.performed_treatment(tech, treatment_result)
+    [next_treatment|blah] = rest
+    TestProbe.assert_receive(treatment_supervisor, {:perform_treatment, next_treatment, experiment.task, experiment.sample_size}, 100)
+    Tech.performed_treatment(tech, treatment_result)
+    TestProbe.assert_receive(lab, {:performed_experiment, [treatment_result, treatment_result]}, 100)
   end
 
   test "On completion of a treatment, treatment_result is added to treatment_results, and next treatment is delegated" do
+    # {:ok, lab} = TestProbe.start_link
+    # {:ok, tech} = Tech.start_link(lab)
+    # {:ok, treatment_supervisor} = TestProbe.start_link
   end
 end
