@@ -6,7 +6,9 @@ defmodule Distne.Net.TestProbe do
   require Record
   require ExUnit.Assertions
 
-  Record.defrecord State, received: nil, sent: nil
+  defmodule State do
+    defstruct received: nil, sent: nil
+  end
 
   alias Distne.Net.TestProbe, as: TestProbe
 
@@ -14,45 +16,61 @@ defmodule Distne.Net.TestProbe do
   Starts a new TestProbe
   """
   def start_link() do
-    GenServer.start_link(TestProbe, {State, nil, nil})
+    GenServer.start_link(TestProbe, %State{})
   end
 
   def assert_receive(pid, expected, remaining) do
-    {:ok, received} = GenServer.call(pid, :received)
-    if remaining > 0 && received != expected do
-      :timer.sleep(5)
-      assert_receive(pid, expected, remaining - 5)
-    else
-      if expected != received do
-        ExUnit.Assertions.flunk("Testprobe expected to receive: \n\n#{inspect expected}\n\n but received: \n\n#{inspect received}")
+    if remaining > 0 do
+      try do
+        case GenServer.call(pid, :received) do
+          {:ok, received} ->  ExUnit.Assertions.assert(expected = received)
+          {:error, reason} -> assert_receive(pid, expected, remaining - 5000)
+        end
+      catch
+        :exit, _ -> assert_receive(pid, expected, remaining - 5000)
       end
+    else
+        ExUnit.Assertions.flunk("Testprobe expected to receive: \n\n#{inspect expected}\n\n but received: \n\nnil")
     end
   end
 
   def received(pid, remaining) do
-    {:ok, received} = GenServer.call(pid, :received)
-    if remaining > 0 && received == nil do
-      :timer.sleep(5)
-      received(pid, remaining - 5)
+    if remaining > 0 do
+      try do
+        case GenServer.call(pid, :received) do
+          {:ok, received} -> received
+          {:error, reason} -> received(pid, remaining - 5000)
+        end
+      catch
+        :exit, _ -> received(pid, remaining - 5000)
+      end
     else
-      received
+      nil
     end
   end
 
-  def handle_call(:received, _from, {State, received, sent}) do
-    {:reply, {:ok, received}, {State, received, sent}}
+  def init(args) do
+    {:ok, blocking_queue} = BlockingQueue.start_link(5)
+    {:ok, %State{received: blocking_queue, sent: nil}}
   end
 
-  def handle_call({:send, pid, message}, _from, {State, received, _sent}) do
+  def handle_call(:received, _from, state) do
+    received = BlockingQueue.pop(state.received)
+    {:reply, {:ok, received}, state}
+  end
+
+  def handle_call({:send, pid, message}, _from, state) do
     GenServer.cast(pid, message)
-    {:reply, :ok, {State, received, message}}
+    {:reply, :ok, %State{state|sent: message}}
   end
 
-  def handle_call(message, _from, {State, _, sent}) do
-    {:reply, :ok, {State, message, sent}}
+  def handle_call(message, _from, state) do
+    BlockingQueue.push(state.received, message)
+    {:reply, :ok, state}
   end
 
-  def handle_cast(message, {State, _, sent}) do
-    {:noreply, {State, message, sent}}
+  def handle_cast(message, state) do
+    BlockingQueue.push(state.received, message)
+    {:noreply, state}
   end
 end

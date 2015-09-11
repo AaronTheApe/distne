@@ -29,7 +29,7 @@ defmodule Distne.Task.BitParity.BitParityNeuroControllerTest do
     {:ok, nc} = BitParityNeuroController.start_link(net, task)
     BitParityNeuroController.output_vector(nc, output_vector)
     expected_parity =
-      if output > 0.5 do
+      if output > 0.0 do
         1
       else
         0

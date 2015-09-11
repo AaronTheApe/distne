@@ -44,7 +44,7 @@ defmodule Distne.Lab.TreatmentSupevisorTest do
     expected_cpu_time = (element_result_1.cpu_time + element_result_2.cpu_time)/2.0
     expected_generations = (element_result_1.generations + element_result_2.generations)/2.0
     expected_tasks = (element_result_1.tasks + element_result_2.tasks)/2.0
-    expected_treatment_result = %TreatmentResult{cpu_time: expected_cpu_time, generations: expected_generations, tasks: expected_tasks}
+    expected_treatment_result = %TreatmentResult{cpu_time: expected_cpu_time, generations: expected_generations, tasks: expected_tasks, treatment_name: "rwg"}
     TestProbe.assert_receive(tech, {:performed_treatment, expected_treatment_result}, 1000)
   end
 

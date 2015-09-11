@@ -7,6 +7,7 @@ defmodule Distne.Lab.TechTest do
   alias Distne.Lab.Experiment, as: Experiment
   alias Distne.Lab.TreatmentResult, as: TreatmentResult
   alias Distne.Net.TestProbe, as: TestProbe
+  alias Distne.Lab.ExperimentResult, as: ExperimentResult
 
   test "Tech starts with a lab, and creates a treatment_supervisor" do
     {:ok, lab} = TestProbe.start_link
@@ -50,6 +51,6 @@ defmodule Distne.Lab.TechTest do
     [next_treatment|blah] = rest
     TestProbe.assert_receive(treatment_supervisor, {:perform_treatment, next_treatment, experiment.task, experiment.sample_size}, 100)
     Tech.performed_treatment(tech, treatment_result)
-    TestProbe.assert_receive(lab, {:performed_experiment, [treatment_result, treatment_result]}, 100)
+    TestProbe.assert_receive(lab, {:performed_experiment, %ExperimentResult{treatment_results: [treatment_result, treatment_result]}}, 100)
   end
 end
