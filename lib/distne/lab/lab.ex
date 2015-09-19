@@ -35,7 +35,7 @@ defmodule Distne.Lab.Lab do
   end
 
   #GenServer Callbacks
-  def init(args) do
+  def init(_args) do
     IO.puts "Constructing Lab..."
     {:ok, tech} = Tech.start_link(self)
     {:ok, %State{tech: tech}}

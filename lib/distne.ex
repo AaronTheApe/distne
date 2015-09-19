@@ -4,7 +4,7 @@ defmodule Distne do
   alias Distne.Lab.Treatment, as: Treatment
   alias Distne.Lab.Task, as: Task
 
-  def main(args) do
+  def main(_args) do
     {:ok, experiment} = formulate_experiment
     {:ok, lab} = Lab.start_link
     Lab.perform_experiment(lab, experiment)

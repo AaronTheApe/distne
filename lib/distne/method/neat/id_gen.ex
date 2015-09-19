@@ -34,10 +34,6 @@ defmodule Distne.Method.Neat.IdGen do
     end
   end
 
-  def node_id(pid, in_node_id, out_node_id) do
-    GenServer.call(pid, {:node_id,  in_node_id, out_node_id})
-  end
-
   def handle_call({:node_id, in_node_id, out_node_id}, _from, state) do
     prev_node_ids = state(state, :prev_node_ids)
     next_node_id = state(state, :next_node_id)
@@ -46,5 +42,9 @@ defmodule Distne.Method.Neat.IdGen do
     else
       {:reply, {:ok, next_node_id}, state(state, next_node_id: next_node_id + 1, prev_node_ids: Map.put(prev_node_ids, {in_node_id, out_node_id}, next_node_id))}
     end
+  end
+
+  def node_id(pid, in_node_id, out_node_id) do
+    GenServer.call(pid, {:node_id,  in_node_id, out_node_id})
   end
 end

@@ -45,7 +45,15 @@ defmodule Distne.Lab.Tech do
     {:ok, %State{args|treatment_supervisor: treatment_supervisor}}
   end
 
-  def handle_call(:get_treatment_supervisor, _sender, state) do
+  def handle_call(:get_experiment, _sender, state) do
+    {:reply, {:ok, state.experiment}, state}
+  end
+
+  def handle_call(:get_remaining_treatments, _sender, state) do
+    {:reply, {:ok, state.remaining_treatments}, state}
+  end
+ 
+ def handle_call(:get_treatment_supervisor, _sender, state) do
     {:reply, {:ok, state.treatment_supervisor}, state}
   end
 
@@ -58,14 +66,6 @@ defmodule Distne.Lab.Tech do
     [first_treatment|remaining_treatments] = experiment.treatments
     TreatmentSupervisor.perform_treatment(state.treatment_supervisor, first_treatment, experiment.task, experiment.sample_size)
     {:noreply, %State{state|experiment: experiment, remaining_treatments: remaining_treatments}}
-  end
-
-  def handle_call(:get_experiment, _sender, state) do
-    {:reply, {:ok, state.experiment}, state}
-  end
-
-  def handle_call(:get_remaining_treatments, _sender, state) do
-    {:reply, {:ok, state.remaining_treatments}, state}
   end
 
   def handle_cast({:performed_treatment, treatment_result}, state) do
