@@ -20,14 +20,15 @@ defmodule Distne.Net.TestProbe do
   end
 
   def assert_receive(pid, expected, remaining) do
+    :timer.sleep(5)
     if remaining > 0 do
       try do
         case GenServer.call(pid, :received) do
           {:ok, received} -> ExUnit.Assertions.assert(expected = received)
-          {:error, _reason} -> assert_receive(pid, expected, remaining - 5000)
+          {:error, _reason} -> assert_receive(pid, expected, remaining - 5)
         end
       catch
-        :exit, _ -> assert_receive(pid, expected, remaining - 5000)
+        :exit, _ -> assert_receive(pid, expected, remaining - 5)
       end
     else
         ExUnit.Assertions.flunk("Testprobe expected to receive: \n\n#{inspect expected}\n\n but received: \n\nnil")
@@ -35,14 +36,15 @@ defmodule Distne.Net.TestProbe do
   end
 
   def received(pid, remaining) do
+    :timer.sleep(5)
     if remaining > 0 do
       try do
         case GenServer.call(pid, :received) do
           {:ok, received} -> received
-          {:error, _reason} -> received(pid, remaining - 5000)
+          {:error, _reason} -> received(pid, remaining - 5)
         end
       catch
-        :exit, _ -> received(pid, remaining - 5000)
+        :exit, _ -> received(pid, remaining - 5)
       end
     else
       nil
@@ -50,13 +52,14 @@ defmodule Distne.Net.TestProbe do
   end
 
   def init(_args) do
-    {:ok, blocking_queue} = BlockingQueue.start_link(5)
-    {:ok, %State{received: blocking_queue, sent: nil}}
+    {:ok, %State{received: :queue.new, sent: nil}}
   end
 
   def handle_call(:received, _from, state) do
-    received = BlockingQueue.pop(state.received)
-    {:reply, {:ok, received}, state}
+    case :queue.out(state.received) do
+      {{:value, msg}, new_received} -> {:reply, {:ok, msg}, %State{state|received: new_received}}
+      {:empty, _received} -> {:reply, {:error, "nothing received"}, state}
+    end
   end
 
   def handle_call({:send, pid, message}, _from, state) do
@@ -65,12 +68,10 @@ defmodule Distne.Net.TestProbe do
   end
 
   def handle_call(message, _from, state) do
-    BlockingQueue.push(state.received, message)
-    {:reply, :ok, state}
+    {:reply, :ok, %State{state|received: :queue.in(message, state.received)}}
   end
 
   def handle_cast(message, state) do
-    BlockingQueue.push(state.received, message)
-    {:noreply, state}
+    {:noreply, %State{state|received: :queue.in(message, state.received)}}
   end
 end

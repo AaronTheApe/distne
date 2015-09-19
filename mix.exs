@@ -30,7 +30,6 @@ defmodule Distne.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [{:inch_ex, only: :docs},
-     {:excoveralls, "~> 0.3", only: [:dev, :test]},
-     {:blocking_queue, "~> 1.0.0"}]
+     {:excoveralls, "~> 0.3", only: [:dev, :test]}]
   end
 end
