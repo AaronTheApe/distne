@@ -5,12 +5,7 @@ defmodule Distne.Method.Neat.Evaluator do
     defstruct pop: nil, genome: nil, net: nil, task: nil
   end
 
-  alias Distne.Method.Neat.Pop, as: Pop
-  alias Distne.Method.Neat.Species, as: Species
-  alias Distne.Method.Neat.IdGen, as: IdGen
   alias Distne.Method.Neat.Genome, as: Genome
-  alias Distne.Method.Neat.NodeGene, as: NodeGene
-  alias Distne.Method.Neat.ConGene, as: ConGene
   alias Distne.Method.Neat.Evaluator, as: Evaluator
   alias Distne.Task.BitParity.BitParityMonitor, as: BitParityMonitor
   def start_link(pop, genome, task) do
@@ -27,12 +22,12 @@ defmodule Distne.Method.Neat.Evaluator do
     {:ok, net} = Genome.develop(state.genome)
     case state.task do
       {:bit_parity, size} ->
-        task = BitParityMonitor.start_link(size, net, self)
+        _task = BitParityMonitor.start_link(size, net, self)
     end
     {:noreply, %State{state | net: net}}
   end
 
-  def handle_cast({:fitness, net, fitness}, state) do
+  def handle_cast({:fitness, _net, fitness}, state) do
     GenServer.cast(state.pop, {:fitness, state.genome, fitness})
     {:noreply, state}
   end

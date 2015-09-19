@@ -12,8 +12,6 @@ defmodule Distne.Method.Neat.Pop do
   alias Distne.Method.Neat.Species, as: Species
   alias Distne.Method.Neat.IdGen, as: IdGen
   alias Distne.Method.Neat.Genome, as: Genome
-  alias Distne.Method.Neat.NodeGene, as: NodeGene
-  alias Distne.Method.Neat.ConGene, as: ConGene
   alias Distne.Method.Neat.Evaluator, as: Evaluator
 
   @doc """

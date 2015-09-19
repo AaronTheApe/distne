@@ -95,20 +95,16 @@ defmodule Distne.Net.Net do
     {:reply, {:ok, con}, state(state, cons: Set.put(state(state, :cons), con))}
   end
 
-  def handle_cast({:input_vector, v}, state) do
-    zip = Enum.zip(state(state, :ins), v)
-    Enum.each(zip, fn {i, iv} ->
-      GenServer.cast(i, {:stim, self(), iv})
-    end)
-    {:noreply, state}
-  end
-
   def handle_call({:set_actuator_array, actuator_array}, _from, state) do
     {:reply, :ok, state(state, actuator_array: actuator_array)}
   end
 
   def handle_call({:set_sensor_array, sensor_array}, _from, state) do
     {:reply, :ok, state(state, sensor_array: sensor_array)}
+  end
+
+  def handle_call(:stop, _from, state) do
+    {:stop, :normal, :ok, state}
   end
 
   def handle_cast({:stim, from, amount}, state) do
@@ -126,7 +122,11 @@ defmodule Distne.Net.Net do
     end
   end
 
-  def handle_call(:stop, _from, state) do
-    {:stop, :normal, :ok, state}
+  def handle_cast({:input_vector, v}, state) do
+    zip = Enum.zip(state(state, :ins), v)
+    Enum.each(zip, fn {i, iv} ->
+      GenServer.cast(i, {:stim, self(), iv})
+    end)
+    {:noreply, state}
   end
 end

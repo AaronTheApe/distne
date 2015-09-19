@@ -8,7 +8,7 @@ defmodule Distne.Method.Neat.Species do
     speciate_spp([%Species{id: 1, rep: head, members: [head]}], tail, threshold)
   end
 
-  def speciate_spp(spp, [], threshold) do
+  def speciate_spp(spp, [], _threshold) do
     spp
   end
 
@@ -16,7 +16,7 @@ defmodule Distne.Method.Neat.Species do
     speciate_spp(add_genome([], spp, genome, threshold), genomes, threshold)
   end
 
-  def add_genome(tried, [], genome, threshold) do
+  def add_genome(tried, [], genome, _threshold) do
     [%Species{id: 1, rep: genome, members: [genome]}|tried]
   end
 

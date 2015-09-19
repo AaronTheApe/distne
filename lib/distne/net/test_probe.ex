@@ -23,8 +23,8 @@ defmodule Distne.Net.TestProbe do
     if remaining > 0 do
       try do
         case GenServer.call(pid, :received) do
-          {:ok, received} ->  ExUnit.Assertions.assert(expected = received)
-          {:error, reason} -> assert_receive(pid, expected, remaining - 5000)
+          {:ok, received} -> ExUnit.Assertions.assert(expected = received)
+          {:error, _reason} -> assert_receive(pid, expected, remaining - 5000)
         end
       catch
         :exit, _ -> assert_receive(pid, expected, remaining - 5000)
@@ -39,7 +39,7 @@ defmodule Distne.Net.TestProbe do
       try do
         case GenServer.call(pid, :received) do
           {:ok, received} -> received
-          {:error, reason} -> received(pid, remaining - 5000)
+          {:error, _reason} -> received(pid, remaining - 5000)
         end
       catch
         :exit, _ -> received(pid, remaining - 5000)
@@ -49,7 +49,7 @@ defmodule Distne.Net.TestProbe do
     end
   end
 
-  def init(args) do
+  def init(_args) do
     {:ok, blocking_queue} = BlockingQueue.start_link(5)
     {:ok, %State{received: blocking_queue, sent: nil}}
   end

@@ -27,7 +27,7 @@ defmodule Distne.Method.Neat.Genome do
       end)
     con_genes =
       Enum.into(
-        con_genes_out_of_set,
+        con_genes_with_innovs,
         HashSet.new)
     %Genome{id: id, node_genes: node_genes, con_genes: con_genes}
   end
