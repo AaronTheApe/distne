@@ -3,7 +3,7 @@ defmodule Distne.Lab.TreatmentSupevisorTest do
 
   alias Distne.Lab.Tech, as: Tech
   alias Distne.Lab.Treatment, as: Treatment
-  alias Distne.Lab.Task, as: Task
+  alias Distne.Task.Task, as: Task
   alias Distne.Lab.Experiment, as: Experiment
   alias Distne.Lab.TreatmentResult, as: TreatmentResult
   alias Distne.Net.TestProbe, as: TestProbe

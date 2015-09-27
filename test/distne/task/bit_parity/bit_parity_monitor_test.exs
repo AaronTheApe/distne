@@ -5,10 +5,10 @@ defmodule Distne.Task.BitParity.BitParityMonitorTest do
   alias Distne.Net.TestProbe, as: TestProbe
 
   test "BitParityMonitor sets up task for net and forwards fitness of net to pop" do
-    size = 2
+    settings = %{size: 2}
     {:ok, net} = TestProbe.start_link()
     {:ok, fit_mon} = TestProbe.start_link()
-    {:ok, monitor} = BitParityMonitor.start_link(size, net, fit_mon)
+    {:ok, monitor} = BitParityMonitor.start_link(settings, net, fit_mon)
     {:set_actuator_array, _} = TestProbe.received(net, 100)
     {:input_vector, [_bias, _bit1, _bit2]} = TestProbe.received(net, 100)
     GenServer.cast(monitor, {:success, true})

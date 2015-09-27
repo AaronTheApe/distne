@@ -4,7 +4,7 @@ defmodule Distne.Lab.LabTest do
   alias Distne.Lab.Experiment, as: Experiment
   alias Distne.Lab.ExperimentResult, as: ExperimentResult
   alias Distne.Lab.Lab, as: Lab
-  alias Distne.Lab.Task, as: Task
+  alias Distne.Task.Task, as: Task
   alias Distne.Lab.Treatment, as: Treatment
   alias Distne.Lab.TreatmentResult, as: TreatmentResult
   alias Distne.Net.TestProbe, as: TestProbe

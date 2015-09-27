@@ -4,7 +4,7 @@ defmodule Distne.Lab.ElementSupevisorTest do
   alias Distne.Net.TestProbe, as: TestProbe
   alias Distne.Lab.ElementSupervisor, as: ElementSupervisor
   alias Distne.Lab.Treatment, as: Treatment
-  alias Distne.Lab.Task, as: Task
+  alias Distne.Task.Task, as: Task
 
   test "An ElementSupervisor supervises elements" do
     {:ok, treatment_supervisor} = TestProbe.start_link

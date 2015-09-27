@@ -10,9 +10,9 @@ defmodule Distne.Task.BitParity.BitParityMonitor do
   alias Distne.Task.BitParity.BitParityNeuroController, as: BitParityNeuroController
   alias Distne.Net.Net, as: Net
 
-  def start_link(size, net, fit_mon) do
+  def start_link(settings, net, fit_mon) do
     {:ok, mon} = GenServer.start_link(BitParityMonitor, %State{net: net, fit_mon: fit_mon})
-    GenServer.cast(mon, {:create_task, size})
+    GenServer.cast(mon, {:create_task, settings.size})
     {:ok, mon}
   end
 
