@@ -39,14 +39,13 @@ defmodule Distne.Lab.LabTest do
         generations: 80,
         tasks: 300
       },
-      treatment_result_2 =
-        %TreatmentResult{
-          treatment_name: "weann",
-          cpu_time: 100.6,
-          generations: 40,
-          tasks: 127
-        }
-      ]
+      %TreatmentResult{
+        treatment_name: "weann",
+        cpu_time: 100.6,
+        generations: 40,
+        tasks: 127
+      }
+    ]
     experiment_result = %ExperimentResult{treatment_results: treatment_results}
     Lab.performed_experiment(lab, experiment_result)
     {:ok, experiment_results} = Lab.get_experiment_results(lab)
