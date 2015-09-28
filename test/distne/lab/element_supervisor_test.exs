@@ -10,9 +10,9 @@ defmodule Distne.Lab.ElementSupevisorTest do
     {:ok, treatment_supervisor} = TestProbe.start_link
     {:ok, element_supervisor} = ElementSupervisor.start_link(treatment_supervisor)
     treatment = %Treatment{name: "rwg", method: :rwg, settings: %{num_inputs: 3, num_hidden: 3, num_outputs: 1}}
-    task = %Task{name: :bit_parity, settings: %{bits: 2}, num_trials: 10}
+    task = %Task{name: :bit_parity, settings: %{size: 2}, num_trials: 10, fitness: 0.90}
     ElementSupervisor.perform_element(element_supervisor, treatment, task)
-    blah = TestProbe.received(treatment_supervisor, 100)
+    blah = TestProbe.received(treatment_supervisor, 10000)
     IO.inspect(blah)
   end
 end

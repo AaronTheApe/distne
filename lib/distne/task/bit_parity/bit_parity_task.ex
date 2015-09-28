@@ -32,13 +32,15 @@ defmodule Distne.Task.BitParity.BitParityTask do
   end
 
   def handle_cast({:parity, parity}, state) do
-    success =
-      if parity == BitParity.even(state(state, :bits)) do
-        true
+    actual_parity = BitParity.even(state(state, :bits))
+    control_parity =
+      if actual_parity == 0 do
+        -0.9
       else
-        false
+        0.9
       end
-    GenServer.cast(state(state, :monitor), {:success, success})
+    error = abs(control_parity - parity)
+    GenServer.cast(state(state, :monitor), {:success, error})
     {:noreply, state}
   end
 end

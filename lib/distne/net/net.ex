@@ -70,6 +70,10 @@ defmodule Distne.Net.Net do
     GenServer.start_link(Net, state())
   end
 
+  def stop(net) do
+    GenServer.call(net, :stop)
+  end
+
   def handle_call(:add_hid, _from, state) do
     {:ok, hid} = Hid.start_link()
     {:reply, {:ok, hid}, state(state, hids: Set.put(state(state, :hids), hid))}

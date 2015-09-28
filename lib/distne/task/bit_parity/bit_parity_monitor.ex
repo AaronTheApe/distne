@@ -16,6 +16,10 @@ defmodule Distne.Task.BitParity.BitParityMonitor do
     {:ok, mon}
   end
 
+  def stop(pid) do
+    GenServer.call(pid, :stop)
+  end
+
   def handle_cast({:create_task, size}, state) do
     {:ok, task} = BitParityTask.start_link(size, self)
     {:ok, nc} = BitParityNeuroController.start_link(state.net, task)
@@ -24,13 +28,8 @@ defmodule Distne.Task.BitParity.BitParityMonitor do
     {:noreply, %State{state | task: task, nc: nc}}
   end
 
-  def handle_cast({:success, success}, state) do
-    fitness =
-      if success do
-        1.0
-      else
-        0.0
-      end
+  def handle_cast({:success, error}, state) do
+    fitness = 1.0 - error
     GenServer.cast(state.fit_mon, {:fitness, state.net, fitness})
     {:noreply, state}
   end

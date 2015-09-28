@@ -13,5 +13,7 @@ defmodule Distne.Task.EvaluatorTest do
     task = %Task{name: :bit_parity, settings: settings, num_trials: 10}
     net = Rwg.random_net(%{num_inputs: 3, num_hidden: 3, num_outputs: 1, min: -10, max: 10})
     Evaluator.evaluate(evaluator, net, task)
+    {:evaluated, net, fitness} = TestProbe.received(method, 100)
+    IO.inspect(fitness)
   end
 end

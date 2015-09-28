@@ -36,13 +36,13 @@ defmodule Distne.Task.BitParity.BitParityNeuroController do
 
   def handle_cast({:output_vector, [output]}, state) do
     IO.inspect(output)
-    parity =
-      if output > 0.0 do
-        1
-      else
-        0
-      end
-    BitParityTask.parity(state(state, :task), parity)
+    # parity =
+    #   if output > 0.0 do
+    #     1
+    #   else
+    #     0
+    #   end
+    BitParityTask.parity(state(state, :task), output)
     {:noreply, state}
   end
 end
