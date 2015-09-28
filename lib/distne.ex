@@ -20,7 +20,7 @@ defmodule Distne do
       %Treatment{name: "rwg_small", method: :rwg,
         settings: %{num_inputs: 3, num_hidden: 1, num_outputs: 1, min_weight: -10.0, max_weight: 10.0}}
     ]
-    task = %Task{name: :bit_parity, settings: %{num_bits: 2}, num_trials: 5}
+    task = %Task{name: :bit_parity, settings: %{size: 2}, num_trials: 5, fitness: 0.91}
     sample_size = 2
     experiment = %Experiment{
       name: name, treatments: treatments, task: task, sample_size: sample_size}
