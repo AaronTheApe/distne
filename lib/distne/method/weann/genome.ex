@@ -1,5 +1,5 @@
 defmodule Distne.Method.Weann.Genome do
-  defstruct node_genes: nil, con_genes: nil
+  defstruct id: nil, node_genes: nil, con_genes: nil
 
   alias Distne.Method.Weann.NodeGene, as: NodeGene
   alias Distne.Method.Weann.ConGene, as: ConGene
@@ -34,7 +34,8 @@ defmodule Distne.Method.Weann.Genome do
       end)
     end)
     con_genes = input_layer ++ output_layer
-    %Genome{node_genes: node_genes, con_genes: con_genes}
+    id = :erlang.unique_integer([:monotonic, :positive])
+    %Genome{id: id, node_genes: node_genes, con_genes: con_genes}
   end
 
   def random_weight(min_weight, max_weight) do
@@ -67,6 +68,7 @@ defmodule Distne.Method.Weann.Genome do
         cg
       end
     end)
-    %Genome{genome|con_genes: new_con_genes}
+    id = :erlang.unique_integer([:monotonic, :positive])
+    %Genome{id: id, node_genes: genome.node_genes, con_genes: new_con_genes}
   end
 end

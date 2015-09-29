@@ -20,7 +20,7 @@ defmodule Distne.Task.BitParity.BitParityNeuroController do
   end
 
   def handle_cast({:bits, bits}, state) do
-    IO.inspect bits
+    #IO.inspect bits
     bias = 1.0
     GenServer.cast(state(state, :net), {:input_vector, [bias |
       Enum.map(bits, fn(b) ->
@@ -35,7 +35,7 @@ defmodule Distne.Task.BitParity.BitParityNeuroController do
   end
 
   def handle_cast({:output_vector, [output]}, state) do
-    IO.inspect(output)
+    #IO.inspect(output)
     # parity =
     #   if output > 0.0 do
     #     1
