@@ -31,6 +31,14 @@ defmodule Distne.Net.Out do
     GenServer.call(pid, {:add_source, source})
   end
 
+  def stop(pid) do
+    GenServer.call(pid, :stop)
+  end
+
+  def handle_call(:stop, _from, state) do
+    {:stop, :normal, :ok, state}
+  end
+
   def handle_call({:add_source, source}, _from, {:state, sources, sink, pending, sum}) do
     {:reply, :ok, {:state, Set.put(sources, source), sink, Set.put(pending, source), sum}}
   end

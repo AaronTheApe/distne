@@ -39,6 +39,7 @@ defmodule Distne.Task.Evaluator do
   end
 
   def handle_call(:stop, _from, state) do
+    #BitParityMonitor.stop(state.monitor)
     {:stop, :normal, :ok, state}
   end
 

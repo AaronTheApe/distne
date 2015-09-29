@@ -19,6 +19,14 @@ defmodule Distne.Task.BitParity.BitParityNeuroController do
     GenServer.cast(nc, {:output_vector, output_vector})
   end
 
+  def stop(pid) do
+    GenServer.call(pid, :stop)
+  end
+
+  def handle_call(:stop, _from, state) do
+    {:stop, :normal, :ok, state}
+  end
+
   def handle_cast({:bits, bits}, state) do
     #IO.inspect bits
     bias = 1.0

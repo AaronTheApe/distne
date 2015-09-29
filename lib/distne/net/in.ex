@@ -24,6 +24,14 @@ defmodule Distne.Net.In do
     GenServer.call(pid, {:add_sink, sink})
   end
 
+  def stop(pid) do
+    GenServer.call(pid, :stop)
+  end
+
+  def handle_call(:stop, _from, state) do
+    {:stop, :normal, :ok, state}
+  end
+
   def handle_call({:add_sink, sink}, _from, {:state, sinks}) do
     {:reply, :ok, {:state, Set.put(sinks, sink)}}
   end

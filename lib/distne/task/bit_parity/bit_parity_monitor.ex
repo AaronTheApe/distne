@@ -35,6 +35,8 @@ defmodule Distne.Task.BitParity.BitParityMonitor do
   end
 
   def handle_call(:stop, _from, state) do
+    BitParityTask.stop(state.task)
+    BitParityNeuroController.stop(state.nc)
     {:stop, :normal, :ok, state}
   end
 end

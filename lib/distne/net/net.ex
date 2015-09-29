@@ -108,6 +108,22 @@ defmodule Distne.Net.Net do
   end
 
   def handle_call(:stop, _from, state) do
+    ins = state(state, :ins)
+    Enum.each(ins, fn(input) ->
+      In.stop(input)
+    end)
+    hids = state(state, :hids)
+    Enum.each(hids, fn(hid) ->
+      Hid.stop(hid)
+    end)
+    outs = state(state, :outs)
+    Enum.each(outs, fn(out) ->
+      Out.stop(out)
+    end)
+    cons = state(state, :cons)
+    Enum.each(cons, fn(con) ->
+      Con.stop(con)
+    end)
     {:stop, :normal, :ok, state}
   end
 

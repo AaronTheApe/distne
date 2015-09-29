@@ -2,7 +2,7 @@ defmodule Distne.Method.Weann.Weann do
   use GenServer
 
   defmodule State do
-    defstruct num_inputs: nil, num_hidden: nil, num_outputs: nil, min_weight: -10.0, max_weight: +10.0, mut_rate: nil, mut_std_dev: nil, pop_size: nil, task: nil, client: nil, id_net_evaluator_zip: nil, fitnesses: [], population: nil
+    defstruct num_inputs: nil, num_hidden: nil, num_outputs: nil, min_weight: -10.0, max_weight: +10.0, mut_rate: nil, mut_std_dev: nil, pop_size: nil, task: nil, client: nil, id_net_evaluator_zip: nil, fitnesses: [], population: nil, generations: 0, tasks: 0
   end
 
   alias Distne.Method.Weann.Weann, as: Weann
@@ -16,7 +16,7 @@ defmodule Distne.Method.Weann.Weann do
   end
 
   def init(settings) do
-    state = %State{num_inputs: settings.num_inputs, num_hidden: settings.num_hidden, num_outputs: settings.num_outputs, min_weight: settings.min_weight, max_weight: settings.max_weight, mut_rate: settings.mut_rate, mut_std_dev: settings.mut_std_dev, pop_size: settings.pop_size}
+    state = %State{num_inputs: settings.num_inputs, num_hidden: settings.num_hidden, num_outputs: settings.num_outputs, min_weight: settings.min_weight, max_weight: settings.max_weight, mut_rate: settings.mut_rate, mut_std_dev: settings.mut_std_dev, pop_size: settings.pop_size, generations: 0, tasks: 0}
     {:ok, state}
   end
 
@@ -41,13 +41,15 @@ defmodule Distne.Method.Weann.Weann do
   end
 
   def handle_cast(:perform_generation, state) do
+    generations = state.generations + 1
+    tasks = state.tasks + state.pop_size
     id_net_evaluator_zip = Enum.map(state.population, fn(member) ->
       net = Genome.develop(member)
       {:ok, evaluator} = Evaluator.start_link(self)
       Evaluator.evaluate(evaluator, net, state.task)
       {member.id, net, evaluator}
     end)
-    {:noreply, %State{state| id_net_evaluator_zip: id_net_evaluator_zip, fitnesses: []}}
+    {:noreply, %State{state| id_net_evaluator_zip: id_net_evaluator_zip, fitnesses: [], generations: generations, tasks: tasks}}
   end
 
   def handle_cast(:perform_reproduction, state) do
@@ -78,9 +80,9 @@ defmodule Distne.Method.Weann.Weann do
       fitnesses = List.keysort(fitnesses, 1)
       {champion_id, champion_fitness} = List.last(fitnesses)
       if champion_fitness > state.task.fitness do
-        GenServer.call(state.client, {:solved, champion_fitness, champion_id})
+        GenServer.call(state.client, {:solved, state.generations, state.tasks, champion_fitness, champion_id})
       else
-        GenServer.call(state.client, {:not_solved, champion_fitness, champion_id})
+        GenServer.call(state.client, {:not_solved, state.generations, state.tasks, champion_fitness, champion_id})
         Weann.perform_reproduction(self)
       end
       {:noreply, %State{state| fitnesses: fitnesses}}
