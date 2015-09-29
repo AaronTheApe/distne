@@ -5,15 +5,13 @@ defmodule Distne.Method.Weann.Weann do
   #   defstruct num_inputs: nil, num_hidden: nil, num_outputs: nil, min: -10, max: +10, size: nil
   # end
 
-  # alias Distne.Method.Weann.Weann, as: Weann
+  alias Distne.Method.Weann.Weann, as: Weann
   # alias Distne.Net.Net, as: Net
   # alias Distne.Task.Evaluator, as: Evaluator
 
-  # def start_link(settings) do
-  #   GenServer.start_link(
-  #     Rwg,
-  #     %State{num_inputs: settings.num_inputs, num_hidden: settings.num_hidden, num_outputs: settings.num_outputs, size: settings.size})
-  # end
+  def start_link(settings) do
+    GenServer.start_link(Weann, settings)
+  end
 
   # def solve(pid, task, client) do
   #   GenServer.cast(pid, {:solve, task, client})

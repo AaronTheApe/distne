@@ -8,7 +8,7 @@ defmodule Distne.Method.Weann.GenomeTest do
 
   test "generates random genomes of the correct size, that can develop into functioning networks, and be mutated to form other networks" do
     num_inputs = 3
-    num_hidden = 5
+    num_hidden = 10
     num_outputs = 1
     max_weight = 10.0
     min_weight = -10.0
@@ -26,7 +26,9 @@ defmodule Distne.Method.Weann.GenomeTest do
     {:evaluated, net, fitness} = TestProbe.received(method, 100)
     IO.inspect(fitness)
 
-    mutated_genome = Genome.mutate(genome, rate)
+    rate = 0.10
+    st_dev = 10.0
+    mutated_genome = Genome.mutate(genome, rate, st_dev)
   end
 end
 

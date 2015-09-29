@@ -58,4 +58,15 @@ defmodule Distne.Method.Weann.Genome do
     end)
     net
   end
+
+  def mutate(genome, rate, st_dev) do
+    new_con_genes = Enum.map(genome.con_genes, fn(cg) ->
+      if :rand.uniform < rate do
+        %ConGene{cg|weight: cg.weight + :rand.normal * st_dev}
+      else
+        cg
+      end
+    end)
+    %Genome{genome|con_genes: new_con_genes}
+  end
 end
